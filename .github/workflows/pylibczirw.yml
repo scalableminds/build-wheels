@@ -1,4 +1,4 @@
-name: Build
+name: pylibCZIrw
 
 on: [push, pull_request, workflow_dispatch]
 
@@ -15,7 +15,7 @@ jobs:
 
       - name: Download pylibCZIrw
         run: |
-          URL=python -c 'import requests; print([u for u in requests.get("https://pypi.org/pypi/pylibczirw/3.4.0/json").json()["urls"] if u["url"].endswith(".tar.gz")][0]["url"])'
+          URL=$(python -c 'import requests; print([u for u in requests.get("https://pypi.org/pypi/pylibczirw/3.4.0/json").json()["urls"] if u["url"].endswith(".tar.gz")][0]["url"])')
           wget $URL -o pylibCZIrw.tar.gz
           tar -xvf pylibCZIrw.tar.gz
           mv pylibCZIrw* pylibCZIrw
@@ -26,7 +26,7 @@ jobs:
       - name: Install cibuildwheel
         run: python -m pip install cibuildwheel==2.12.3
 
-      - name: Fix cmake for mac OS
+      - name: Fix cmake for Mac
         if: ${{ matrix.os == 'macos-latest' }}
         run: |
           sed -i s/CMAKE_OSX_DEPLOYMENT_TARGET "10.9"/CMAKE_OSX_DEPLOYMENT_TARGET "12.0"/g pylibCZIrw/CMakeLists.txt
@@ -40,9 +40,9 @@ jobs:
           CIBW_ARCHS_LINUX: "x86_64 aarch64"
           CIBW_ARCHS_WINDOWS: "AMD64"
         run: |
-          cd pylibCZIrw*
+          cd pylibCZIrw
           python -m cibuildwheel --output-dir wheelhouse
 
       - uses: actions/upload-artifact@v3
         with:
-          path: ./pylibCZIrw*/wheelhouse/*.whl
+          path: ./pylibCZIrw/wheelhouse/*.whl
