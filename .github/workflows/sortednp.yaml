@@ -36,4 +36,5 @@ jobs:
 
       - uses: actions/upload-artifact@v3
         with:
+          name: wheels
           path: ./sortednp/wheelhouse/*.whl
