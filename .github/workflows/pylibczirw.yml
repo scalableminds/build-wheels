@@ -1,6 +1,15 @@
 name: pylibCZIrw
 
-on: [push, pull_request, workflow_dispatch]
+on: 
+  workflow_dispatch:
+    inputs:
+      pylibczirwVersion:
+        description: "pylibCZIrw version"
+        required: true
+        default: "3.4.0"
+      cibwVersion:
+        description: "cibuildwheel version"
+        default: "2.12.3"
 
 jobs:
   build_wheels:
@@ -8,8 +17,8 @@ jobs:
     runs-on: ${{ matrix.os }}
     env:
       CIBW_BUILD: "cp38-* cp39-* cp310-* cp311-*"
-      CIBW_VERSION: "2.12.3"
-      PYLIBCZIRW_VERSION: "3.4.0"
+      CIBW_VERSION: ${{ inputs.cibwVersion }}
+      PYLIBCZIRW_VERSION: ${{ inputs.pylibczirwVersion }}
     strategy:
       matrix:
         os: [ubuntu-latest, windows-latest, macos-latest]
@@ -54,3 +63,21 @@ jobs:
         with:
           name: wheels
           path: ./pylibCZIrw/wheelhouse/*.whl
+
+  publish:
+    name: Publish wheels to pypi.scm.io
+    needs: [build_wheels]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Get wheels
+        uses: actions/download-artifact@v3
+        with:
+          name: wheels
+          path: dist
+
+      - name: Publish to pypy.scm.io
+        uses: pypa/gh-action-pypi-publish@release/v1
+        with:
+          user: ${{ secrets.PYPI_SCM_USERNAME }}
+          password: ${{ secrets.PYPI_SCM_PASSWORD }}
+          repository-url: https://pypi.scm.io/simple/
