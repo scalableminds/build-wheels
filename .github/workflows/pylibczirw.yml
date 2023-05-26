@@ -18,7 +18,8 @@ jobs:
           PYLIBCZIRW_VERSION: "3.4.0"
         shell: bash
         run: |
-          URL=$(python -c "import requests; print([u for u in requests.get(\"https://pypi.org/pypi/pylibczirw/${PYLIBCZIRW_VERSION}/json\").json()['urls'] if u['url'].endswith('.tar.gz')][0]['url'])")
+          wget "https://pypi.org/pypi/pylibczirw/${PYLIBCZIRW_VERSION}/json" -O pypi.json
+          URL=$(python -c "import json, sys; print([u for u in json.load(sys.stdin)['urls'] if u['url'].endswith('.tar.gz')][0]['url'])" < pypi.json)
           wget $URL -O pylibCZIrw.tar.gz
           tar -xvf pylibCZIrw.tar.gz
           mv pylibCZIrw-${PYLIBCZIRW_VERSION} pylibCZIrw
