@@ -81,3 +81,4 @@ jobs:
           user: ${{ secrets.PYPI_SCM_USERNAME }}
           password: ${{ secrets.PYPI_SCM_PASSWORD }}
           repository-url: https://pypi.scm.io/simple/
+          skip-existing: true
