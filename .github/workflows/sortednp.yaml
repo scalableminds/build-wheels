@@ -7,11 +7,15 @@ jobs:
     name: Build wheels on ${{ matrix.os }}
     runs-on: ${{ matrix.os }}
     env:
+      CIBW_BUILD: "cp38-* cp39-* cp310-* cp311-*"
       NUMPY_VERSION: "1.23.5"
       CIBW_VERSION: "2.12.3"
     strategy:
       matrix:
         os: [ubuntu-latest, windows-latest, macos-latest]
+    defaults:
+      run:
+        shell: bash
 
     steps:
       - uses: actions/checkout@v3
@@ -28,7 +32,6 @@ jobs:
 
       - name: Build wheels
         env:
-          CIBW_BUILD: "cp38-* cp39-* cp310-* cp311-*"
           CIBW_SKIP: "*-musllinux*"
           CIBW_ARCHS_MACOS: "universal2"
           CIBW_ARCHS_LINUX: "x86_64"
@@ -52,6 +55,7 @@ jobs:
         with:
           name: wheels
           path: dist
+
       - name: Publish to pypy.scm.io
         uses: pypa/gh-action-pypi-publish@release/v1
         with:
