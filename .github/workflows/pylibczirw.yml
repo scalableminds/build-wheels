@@ -16,6 +16,7 @@ jobs:
       - name: Download pylibCZIrw
         env: 
           PYLIBCZIRW_VERSION: "3.4.0"
+        shell: bash
         run: |
           URL=$(python -c "import requests; print([u for u in requests.get(\"https://pypi.org/pypi/pylibczirw/${PYLIBCZIRW_VERSION}/json\").json()['urls'] if u['url'].endswith('.tar.gz')][0]['url'])")
           wget $URL -O pylibCZIrw.tar.gz
