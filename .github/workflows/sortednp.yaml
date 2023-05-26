@@ -37,8 +37,8 @@ jobs:
 
       - name: Download sortednp
         run: |
-          git clone https://gitlab.sauerburger.com/frank/sortednp.git
-          git checkout "release-${SORTEDNP_VERSION}"
+          git clone https://gitlab.sauerburger.com/frank/sortednp.git \
+            --branch "release-${SORTEDNP_VERSION}" --single-branch
 
       - uses: actions/setup-python@v4
         with:
