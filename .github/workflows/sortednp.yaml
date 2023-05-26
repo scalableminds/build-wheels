@@ -17,7 +17,7 @@ jobs:
         run: git clone https://gitlab.sauerburger.com/frank/sortednp.git
 
       # Used to host cibuildwheel
-      - uses: actions/setup-python@v3
+      - uses: actions/setup-python@v4
 
       - name: Install cibuildwheel
         run: python -m pip install cibuildwheel==2.12.3
@@ -38,3 +38,19 @@ jobs:
         with:
           name: wheels
           path: ./sortednp/wheelhouse/*.whl
+  
+  publish:
+    needs: [build_wheels]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Get wheels
+        uses: actions/download-artifact@v3
+        with:
+          name: wheels
+          path: dist
+      - name: Publish to pypy.scm.io
+        uses: pypa/gh-action-pypi-publish@release/v1
+        with:
+          user: ${{ secrets.PYPI_SCM_USERNAME }}
+          password: ${{ secrets.PYPI_SCM_PASSWORD }}
+          repository-url: https://pypi.scm.io/simple/
