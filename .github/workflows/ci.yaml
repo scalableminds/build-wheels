@@ -23,15 +23,13 @@ jobs:
 
       - name: Build wheels
         env:
-          CIBW_BEFORE_BUILD: pip install numpy==1.23.5
-          CIBW_BUILD: cp38-* cp39-* cp310-* cp311-*
+          CIBW_BEFORE_BUILD: "pip install numpy==1.23.5"
+          CIBW_BUILD: "cp38-* cp39-* cp310-* cp311-*"
+          CIBW_SKIP: "*-musllinux-* *-i686"
         run: |
           cd sortednp
           python -m cibuildwheel --output-dir wheelhouse
-        # to supply options, put them in 'env', like:
-        # env:
-        #   CIBW_SOME_OPTION: value
 
       - uses: actions/upload-artifact@v3
         with:
-          path: ./wheelhouse/*.whl
+          path: ./sortednp/wheelhouse/*.whl
