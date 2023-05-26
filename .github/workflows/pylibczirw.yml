@@ -18,9 +18,16 @@ jobs:
           PYLIBCZIRW_VERSION: "3.4.0"
         shell: bash
         run: |
-          wget "https://pypi.org/pypi/pylibczirw/${PYLIBCZIRW_VERSION}/json" -O pypi.json
-          URL=$(python -c "import json, sys; print([u for u in json.load(sys.stdin)['urls'] if u['url'].endswith('.tar.gz')][0]['url'])" < pypi.json)
-          wget $URL -O pylibCZIrw.tar.gz
+          pip install requests
+
+          echo "import requests" > download.py
+          echo "pypi_info = requests.get(\"https://pypi.org/pypi/pylibczirw/${PYLIBCZIRW_VERSION}/json\").json()" >> download.py
+          echo "url = [u for u in pypi_info['urls'] if u['url'].endswith('.tar.gz')][0]['url']" >> download.py
+          echo "buf = requests.get(url).content" >> download.py
+          echo "with open('pylibCZIrw.tar.gz', 'wb') as f:" >> download.py
+          echo "  f.write(buf)" >> download.py
+
+          python download.py
           tar -xvf pylibCZIrw.tar.gz
           mv pylibCZIrw-${PYLIBCZIRW_VERSION} pylibCZIrw
 
