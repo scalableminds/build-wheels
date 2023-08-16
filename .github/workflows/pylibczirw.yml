@@ -47,7 +47,8 @@ jobs:
       - name: Fix cmake for Mac
         if: ${{ matrix.os == 'macos-latest' }}
         run: |
-          sed -i '' 's/CMAKE_OSX_DEPLOYMENT_TARGET "10.9"/CMAKE_OSX_DEPLOYMENT_TARGET "12.0"/g' pylibCZIrw/CMakeLists.txt 
+          sed -i '' 's/CMAKE_OSX_DEPLOYMENT_TARGET "10.9"/CMAKE_OSX_DEPLOYMENT_TARGET "12.0"/g' pylibCZIrw/CMakeLists.txt
+          sed -i '' 's/ENDIF(APPLE)/    set(CMAKE_OSX_ARCHITECTURES "x86_64;arm64")\nENDIF(APPLE)/g' pylibCZIrw/CMakeLists.txt
 
       - name: Build wheels
         env:
