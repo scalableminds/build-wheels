@@ -6,10 +6,10 @@ on:
       pylibczirwVersion:
         description: "pylibCZIrw version"
         required: true
-        default: "3.4.0"
+        default: "3.5.1"
       cibwVersion:
         description: "cibuildwheel version"
-        default: "2.12.3"
+        default: "2.15.0"
 
 jobs:
   build_wheels:
