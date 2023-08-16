@@ -16,7 +16,7 @@ jobs:
     name: Build wheels on ${{ matrix.os }}
     runs-on: ${{ matrix.os }}
     env:
-      CIBW_BUILD: "cp38-* cp39-* cp310-* cp311-*"
+      CIBW_BUILD: "cp311-*"
       CIBW_VERSION: ${{ inputs.cibwVersion }}
       PYLIBCZIRW_VERSION: ${{ inputs.pylibczirwVersion }}
     strategy:
@@ -53,7 +53,7 @@ jobs:
       - name: Build wheels
         env:
           CIBW_SKIP: "*-musllinux*"
-          CIBW_ARCHS_MACOS: "universal2"
+          CIBW_ARCHS_MACOS: "x86_64 arm64"
           CIBW_ARCHS_LINUX: "x86_64"
           CIBW_ARCHS_WINDOWS: "AMD64"
         run: |
