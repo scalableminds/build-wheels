@@ -60,6 +60,11 @@ jobs:
           cd pylibCZIrw
           python -m cibuildwheel --output-dir wheelhouse
 
+      - name: Fix platform tags for Mac
+        if: ${{ matrix.os == 'macos-latest' }}
+        run: |
+          for f in ./pylibCZIrw/wheelhouse/*.whl ; do mv $f ${f//macosx_12_0/macosx_10_9} ; done
+
       - uses: actions/upload-artifact@v3
         with:
           name: wheels
