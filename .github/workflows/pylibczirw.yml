@@ -53,8 +53,6 @@ jobs:
       - name: Build wheels
         env:
           CIBW_SKIP: "*-musllinux*"
-          CIBW_BEFORE_ALL_LINUX: "sudo apt-get update && sudo apt-get install -y openssl"
-          CIBW_BEFORE_ALL_MACOS: "brew update && brew install openssl"
           CIBW_ARCHS_MACOS: "universal2"
           CIBW_ARCHS_LINUX: "x86_64"
           CIBW_ARCHS_WINDOWS: "AMD64"
