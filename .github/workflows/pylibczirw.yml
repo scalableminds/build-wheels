@@ -53,7 +53,7 @@ jobs:
       - name: Build wheels
         env:
           CIBW_SKIP: "*-musllinux*"
-          CIBW_PROJECT_REQUIRES_PYTHON: ">=3.8,<=3.12"
+          CIBW_PROJECT_REQUIRES_PYTHON: ">=3.8"
           CIBW_ARCHS_MACOS: "universal2"
           CIBW_ARCHS_LINUX: "x86_64"
           CIBW_ARCHS_WINDOWS: "AMD64"
