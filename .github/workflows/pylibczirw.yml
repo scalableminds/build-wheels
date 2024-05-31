@@ -6,7 +6,7 @@ on:
       pylibczirwVersion:
         description: "pylibCZIrw version"
         required: true
-        default: "3.5.2"
+        default: "4.1.1"
       cibwVersion:
         description: "cibuildwheel version"
         default: "2.18.1"
