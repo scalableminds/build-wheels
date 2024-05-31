@@ -43,9 +43,6 @@ jobs:
           tar -xvf pylibCZIrw.tar.gz
           mv pylibCZIrw-${PYLIBCZIRW_VERSION} pylibCZIrw
 
-      - name: Install cibuildwheel
-        run: python -m pip install cibuildwheel==
-
       - name: Fix cmake for Mac
         if: ${{ matrix.os == 'macos-latest' }}
         run: |
