@@ -59,7 +59,7 @@ jobs:
           CIBW_ARCHS_LINUX: "x86_64"
           CIBW_ARCHS_WINDOWS: "AMD64"
           #CIBW_BEFORE_BUILD_LINUX: apt-get install libssl-dev
-          CIBW_BEFORE_BUILD_LINUX: sudo apt-get update && sudo apt-get install -y openssl
+          CIBW_BEFORE_BUILD_LINUX: apt update && apt install -y libssl-dev
         with:
            package-dir: ./pylibCZIrw
            output-dir: wheelhouse
