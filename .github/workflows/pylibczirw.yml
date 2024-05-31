@@ -60,7 +60,7 @@ jobs:
           CIBW_ARCHS_LINUX: "x86_64"
           CIBW_ARCHS_WINDOWS: "AMD64"
           #CIBW_BEFORE_BUILD_LINUX: apt-get install libssl-dev
-          CIBW_BEFORE_BUILD_LINUX: yum install -y libcurl-devel
+          CIBW_BEFORE_BUILD_LINUX: yum install perl-IPC-Cmd && yum install -y libcurl-devel
           #CIBW_BEFORE_BUILD_LINUX: |
             #curl -o openssl.tar.gz "https://www.openssl.org/source/openssl-3.3.0.tar.gz"
             #tar -xvf openssl.tar.gz
