@@ -23,7 +23,8 @@ jobs:
     strategy:
       matrix:
         # macos-13 is an intel runner, macos-14 is apple silicon
-        os: [ubuntu-latest, windows-latest, macos-13, macos-14]
+        # os: [ubuntu-latest, windows-latest, macos-13, macos-14]
+        os: [ubuntu-latest]
       fail-fast: false
     defaults:
       run:
@@ -59,7 +60,12 @@ jobs:
           CIBW_ARCHS_LINUX: "x86_64"
           CIBW_ARCHS_WINDOWS: "AMD64"
           #CIBW_BEFORE_BUILD_LINUX: apt-get install libssl-dev
-          CIBW_BEFORE_BUILD_LINUX: apt update && apt install -y libssl-dev
+          CIBW_BEFORE_BUILD_LINUX: yum install -y libssl-dev
+          #CIBW_BEFORE_BUILD_LINUX: |
+            #curl -o openssl.tar.gz "https://www.openssl.org/source/openssl-3.3.0.tar.gz"
+            #tar -xvf openssl.tar.gz
+            #make install
+
         with:
            package-dir: ./pylibCZIrw
            output-dir: wheelhouse
