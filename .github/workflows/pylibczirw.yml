@@ -9,7 +9,7 @@ on:
         default: "3.5.2"
       cibwVersion:
         description: "cibuildwheel version"
-        default: "2.16.2"
+        default: "2.18.1"
 
 jobs:
   build_wheels:
