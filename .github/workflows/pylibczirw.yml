@@ -1,7 +1,6 @@
 name: pylibCZIrw
 
 on:
-  push:
   workflow_dispatch:
     inputs:
       pylibczirwVersion:
