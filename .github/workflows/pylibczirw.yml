@@ -1,6 +1,7 @@
 name: pylibCZIrw
 
 on:
+  push:
   workflow_dispatch:
     inputs:
       pylibczirwVersion:
@@ -17,8 +18,8 @@ jobs:
     runs-on: ${{ matrix.os }}
     env:
       CIBW_BUILD: "cp38-* cp39-* cp310-* cp311-*"
-      CIBW_VERSION: ${{ inputs.cibwVersion }}
-      PYLIBCZIRW_VERSION: ${{ inputs.pylibczirwVersion }}
+      CIBW_VERSION: ${{ inputs.cibwVersion || '2.18.1'}}
+      PYLIBCZIRW_VERSION: ${{ inputs.pylibczirwVersion || '4.1.1'}}
     strategy:
       matrix:
         # macos-13 is an intel runner, macos-14 is apple silicon
