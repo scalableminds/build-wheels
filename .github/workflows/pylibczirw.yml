@@ -67,7 +67,7 @@ jobs:
             git clone https://github.com/microsoft/vcpkg
             ./vcpkg/bootstrap-vcpkg.sh
             ls -lisa && pwd
-            cd project
+            cd /project
           CIBW_ENVIRONMENT: "VCPKG_INSTALLATION_ROOT=/usr/local/share"
           #CIBW_BEFORE_BUILD_LINUX: curl -L https://cpanmin.us | perl - IPC::Cmd && whereis openssl && export OPENSSL_ROOT_DIR=/usr/local/ssl && yum install -y libssl-dev
 
