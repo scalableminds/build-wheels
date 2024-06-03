@@ -39,11 +39,14 @@ jobs:
 
       - name: Download pylibCZIrw
         run: |
-          curl -o pypi.json "https://pypi.org/pypi/pylibczirw/${PYLIBCZIRW_VERSION}/json"
-          URL=$(python -c "import json, sys; print([u for u in json.load(sys.stdin)['urls'] if u['url'].endswith('.tar.gz')][0]['url'])" < pypi.json)
-          curl -o pylibCZIrw.tar.gz $URL
-          tar -xvf pylibCZIrw.tar.gz
-          mv pylibCZIrw-${PYLIBCZIRW_VERSION} pylibCZIrw
+          git clone https://github.com/brokkoli71/pylibCZIrw-4.1.1.git
+          mv pylibCZIrw-4.1.1 pylibCZIrw
+        #run: |
+        #  curl -o pypi.json "https://pypi.org/pypi/pylibczirw/${PYLIBCZIRW_VERSION}/json"
+        #  URL=$(python -c "import json, sys; print([u for u in json.load(sys.stdin)['urls'] if u['url'].endswith('.tar.gz')][0]['url'])" < pypi.json)
+        #  curl -o pylibCZIrw.tar.gz $URL
+        #  tar -xvf pylibCZIrw.tar.gz
+        #  mv pylibCZIrw-${PYLIBCZIRW_VERSION} pylibCZIrw
 
       - name: Fix cmake for Mac
         if: ${{ matrix.os == 'macos-latest' }}
@@ -66,6 +69,7 @@ jobs:
             git clone https://github.com/microsoft/vcpkg
             ./vcpkg/bootstrap-vcpkg.sh
             ls -lisa && pwd
+          CIBW_ENVIRONMENT: "VCPKG_INSTALLATION_ROOT=/vcpkg"
           #CIBW_BEFORE_BUILD_LINUX: curl -L https://cpanmin.us | perl - IPC::Cmd && whereis openssl && export OPENSSL_ROOT_DIR=/usr/local/ssl && yum install -y libssl-dev
 
           #CIBW_BEFORE_BUILD_LINUX: |
