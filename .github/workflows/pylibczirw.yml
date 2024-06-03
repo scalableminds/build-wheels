@@ -64,7 +64,7 @@ jobs:
         with:
            package-dir: ./pylibCZIrw
            output-dir: wheelhouse
-           config-file: "{package}/pyproject.toml"
+           config-file: "pyproject.toml"
 
       - name: Fix platform tags for Mac
         if: ${{ matrix.os == 'macos-latest' }}
