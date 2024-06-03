@@ -65,7 +65,7 @@ jobs:
           CIBW_BEFORE_BUILD_LINUX: |
             yum install -y curl zip unzip tar
             git clone https://github.com/microsoft/vcpkg
-            chmod +x vcpkg -R
+            chmod 777 vcpkg -R
             ./vcpkg/bootstrap-vcpkg.sh
             ls -lisa && pwd
             ls -lisa vcpkg
