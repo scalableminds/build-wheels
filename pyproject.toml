@@ -8,5 +8,5 @@ before-all = """
             git clone https://github.com/microsoft/vcpkg
             ./vcpkg/bootstrap-vcpkg.sh
             chmod -R 777 vcpkg
-            vcpkg update
+            ./vcpkg/vcpkg update
             """
