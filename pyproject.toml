@@ -1,0 +1,12 @@
+[tool.cibuildwheel]
+skip = "*-musllinux*"
+environment = {VCPKG_INSTALLATION_ROOT="/project/vcpkg"}
+
+#[tool.cibuildwheel.linux]
+before-all = """
+            yum install -y curl zip unzip tar
+            git clone https://github.com/microsoft/vcpkg
+            ./vcpkg/bootstrap-vcpkg.sh
+            chmod -R 777 vcpkg
+            vcpkg update
+            """
