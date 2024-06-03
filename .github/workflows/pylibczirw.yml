@@ -66,7 +66,7 @@ jobs:
             yum install -y curl zip unzip tar
             git clone https://github.com/microsoft/vcpkg
             ./vcpkg/bootstrap-vcpkg.sh
-            chmod 777 vcpkg 
+            chmod -R 777 vcpkg 
             ls -lisa && pwd && whoami;id
             ls -lisa vcpkg
           CIBW_ENVIRONMENT: "VCPKG_INSTALLATION_ROOT=$(pwd)"
