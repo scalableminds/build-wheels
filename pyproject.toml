@@ -21,4 +21,9 @@ before-build = """
 archs = "AMD64"
 
 [tool.cibuildwheel.macos]
+before-build = """
+            git clone https://github.com/microsoft/vcpkg
+            ./vcpkg/bootstrap-vcpkg.sh
+            ./vcpkg/vcpkg update
+            """
 archs = "universal2"
