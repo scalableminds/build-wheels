@@ -16,7 +16,6 @@ archs = "x86_64"
 
 [tool.cibuildwheel.windows]
 before-build = """
-            cd
             cd C:\\
             git clone https://github.com/microsoft/vcpkg
             .\\vcpkg\\bootstrap-vcpkg.bat

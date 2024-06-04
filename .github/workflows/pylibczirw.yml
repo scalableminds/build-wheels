@@ -36,15 +36,15 @@ jobs:
           python-version: '3.10'
 
       - name: Download pylibCZIrw
-        #run: |
-        #  git clone https://github.com/brokkoli71/pylibCZIrw-4.1.1.git
-        #  mv pylibCZIrw-4.1.1 pylibCZIrw
         run: |
-          curl -o pypi.json "https://pypi.org/pypi/pylibczirw/${PYLIBCZIRW_VERSION}/json"
-          URL=$(python -c "import json, sys; print([u for u in json.load(sys.stdin)['urls'] if u['url'].endswith('.tar.gz')][0]['url'])" < pypi.json)
-          curl -o pylibCZIrw.tar.gz $URL
-          tar -xvf pylibCZIrw.tar.gz
-          mv pylibCZIrw-${PYLIBCZIRW_VERSION} pylibCZIrw
+          git clone -b debug https://github.com/brokkoli71/pylibCZIrw-4.1.1.git
+          mv pylibCZIrw-4.1.1 pylibCZIrw
+        #run: |
+        #  curl -o pypi.json "https://pypi.org/pypi/pylibczirw/${PYLIBCZIRW_VERSION}/json"
+        #  URL=$(python -c "import json, sys; print([u for u in json.load(sys.stdin)['urls'] if u['url'].endswith('.tar.gz')][0]['url'])" < pypi.json)
+        #  curl -o pylibCZIrw.tar.gz $URL
+        #  tar -xvf pylibCZIrw.tar.gz
+        #  mv pylibCZIrw-${PYLIBCZIRW_VERSION} pylibCZIrw
 
       - name: Fix cmake for Mac
         if: ${{ matrix.os == 'macos-latest' }}
