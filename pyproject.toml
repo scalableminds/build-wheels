@@ -11,11 +11,12 @@ before-build = """
             ./vcpkg/bootstrap-vcpkg.sh
             ./vcpkg/vcpkg update
             """
-environment = { VCPKG_INSTALLATION_ROOT = "/vcpkg" }
+environment = { VCPKG_INSTALLATION_ROOT = "{project}/vcpkg" }
 archs = "x86_64"
 
 [tool.cibuildwheel.windows]
 before-build = """
+            cd
             cd C:\\
             git clone https://github.com/microsoft/vcpkg
             .\\vcpkg\\bootstrap-vcpkg.bat
@@ -25,10 +26,10 @@ archs = "AMD64"
 
 [tool.cibuildwheel.macos]
 before-build = """
-            pwd
+            pwd {project}
             git clone https://github.com/microsoft/vcpkg
             ./vcpkg/bootstrap-vcpkg.sh
             ./vcpkg/vcpkg update
             """
-environment = { VCPKG_INSTALLATION_ROOT = "/vcpkg" }
+environment = { VCPKG_INSTALLATION_ROOT = "/Users/runner/work/build-wheels/build-wheels/vcpkg" }
 archs = "universal2"
