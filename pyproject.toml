@@ -1,20 +1,23 @@
 [tool.cibuildwheel]
 skip = "*-musllinux*"
-environment = {VCPKG_INSTALLATION_ROOT="/project/vcpkg"}
+environment = { VCPKG_INSTALLATION_ROOT = "/project/vcpkg" }
 
 [tool.cibuildwheel.linux]
-before-all = """
+before-build = """
             yum install -y curl zip unzip tar
             yum install -y perl-IPC-Cmd
             yum install -y ninja-build
             git clone https://github.com/microsoft/vcpkg
             ./vcpkg/bootstrap-vcpkg.sh
-            chmod -R 777 vcpkg
             ./vcpkg/vcpkg update
             """
 archs = "x86_64"
 
 [tool.cibuildwheel.windows]
+before-build = """
+            git clone https://github.com/microsoft/vcpkg
+            .\\vcpkg\\bootstrap-vcpkg.bat
+            """
 archs = "AMD64"
 
 [tool.cibuildwheel.macos]
