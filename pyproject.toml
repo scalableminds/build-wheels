@@ -1,6 +1,5 @@
 [tool.cibuildwheel]
 skip = "*-musllinux*"
-environment = { VCPKG_INSTALLATION_ROOT = "/project/vcpkg" }
 
 [tool.cibuildwheel.linux]
 before-build = """
@@ -11,13 +10,16 @@ before-build = """
             ./vcpkg/bootstrap-vcpkg.sh
             ./vcpkg/vcpkg update
             """
+environment = { VCPKG_INSTALLATION_ROOT = "/project/vcpkg" }
 archs = "x86_64"
 
 [tool.cibuildwheel.windows]
 before-build = """
+            cd C:\\
             git clone https://github.com/microsoft/vcpkg
             .\\vcpkg\\bootstrap-vcpkg.bat
             """
+environment = { VCPKG_INSTALLATION_ROOT = "C:\\vcpkg" }
 archs = "AMD64"
 
 [tool.cibuildwheel.macos]
@@ -26,4 +28,5 @@ before-build = """
             ./vcpkg/bootstrap-vcpkg.sh
             ./vcpkg/vcpkg update
             """
+environment = { VCPKG_INSTALLATION_ROOT = "/project/vcpkg" }
 archs = "universal2"
