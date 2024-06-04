@@ -25,7 +25,9 @@ archs = "AMD64"
 
 [tool.cibuildwheel.macos]
 before-build = """
-            pwd {project}
+            brew install gcc
+            ls /usr/local
+            ls /opt/homebrew
             git clone https://github.com/microsoft/vcpkg
             ./vcpkg/bootstrap-vcpkg.sh
             ./vcpkg/vcpkg update
