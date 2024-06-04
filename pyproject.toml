@@ -6,10 +6,10 @@ before-build = """
             yum install -y curl zip unzip tar
             yum install -y perl-IPC-Cmd
             yum install -y ninja-build
-            cd /
+            pwd
             git clone https://github.com/microsoft/vcpkg
-            /vcpkg/bootstrap-vcpkg.sh
-            /vcpkg/vcpkg update
+            ./vcpkg/bootstrap-vcpkg.sh
+            ./vcpkg/vcpkg update
             """
 environment = { VCPKG_INSTALLATION_ROOT = "/vcpkg" }
 archs = "x86_64"
@@ -25,10 +25,10 @@ archs = "AMD64"
 
 [tool.cibuildwheel.macos]
 before-build = """
-            cd /
+            pwd
             git clone https://github.com/microsoft/vcpkg
-            /vcpkg/bootstrap-vcpkg.sh
-            /vcpkg/vcpkg update
+            ./vcpkg/bootstrap-vcpkg.sh
+            ./vcpkg/vcpkg update
             """
 environment = { VCPKG_INSTALLATION_ROOT = "/vcpkg" }
 archs = "universal2"
