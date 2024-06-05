@@ -60,6 +60,10 @@ jobs:
           sed -i '' 's/Requires-Python: >=3.7,<3.12/Requires-Python: >=3.7,<4/g' pylibCZIrw/PKG-INFO
           sed -i '' 's/python_requires=">=3.7,<3.12",/python_requires=">=3.7,<4",/g' pylibCZIrw/setup.py
 
+      - name: Debugging with tmate
+        if: ${{ matrix.os == 'windows-latest'}}
+        uses: mxschmitt/action-tmate@v3.18
+
       - name: Patch to include Python3.12 in Windows
         if: ${{ matrix.os == 'windows-latest'}}
         run: |
