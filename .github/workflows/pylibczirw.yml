@@ -67,6 +67,9 @@ jobs:
         run: |
           for f in ./pylibCZIrw/wheelhouse/*.whl ; do mv $f ${f//macosx_12_0/macosx_10_9} ; done
 
+      - name: Debugging with tmate
+        uses: mxschmitt/action-tmate@v3.18
+
       - uses: actions/upload-artifact@v3
         with:
           name: wheels
