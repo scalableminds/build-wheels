@@ -22,8 +22,9 @@ jobs:
       PYLIBCZIRW_VERSION: ${{ inputs.pylibczirwVersion || '4.1.1'}}
     strategy:
       matrix:
-        os: [ubuntu-latest, windows-latest, macos-latest]
-      fail-fast: false
+        # macos-13 is an intel runner, macos-14 is apple silicon
+        os: [ubuntu-latest, windows-latest, macos-13, macos-14]
+        fail-fast: false
     defaults:
       run:
         shell: bash
