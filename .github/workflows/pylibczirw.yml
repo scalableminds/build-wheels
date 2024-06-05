@@ -60,7 +60,7 @@ jobs:
       - name: Patch to include Python3.12 in Windows
         if: ${{ matrix.os == 'windows-latest'}}
         run: |
-          (Get-Content pylibCZIrw/PKG-INFO) -replace 'Requires-Python: >=3.7,<3.12', 'Requires-Python: >=3.7,<4' | Set-Content pylibCZIrw/PKG-INFO
+          powershell -command "(Get-Content pylibCZIrw/PKG-INFO) -replace 'Requires-Python: >=3.7,<3.12', 'Requires-Python: >=3.7,<4' | Set-Content pylibCZIrw/PKG-INFO"
 
       - name: Fix cmake for Mac
         if: ${{ matrix.os == 'macos-13' ||  matrix.os == 'macos-14'}}
