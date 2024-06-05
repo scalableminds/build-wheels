@@ -6,7 +6,6 @@ before-build = """
             yum install -y curl zip unzip tar
             yum install -y perl-IPC-Cmd
             yum install -y ninja-build
-            pwd
             git clone https://github.com/microsoft/vcpkg
             ./vcpkg/bootstrap-vcpkg.sh
             ./vcpkg/vcpkg update
