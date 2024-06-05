@@ -57,9 +57,16 @@ jobs:
           sed -i '' 's/CMAKE_OSX_DEPLOYMENT_TARGET "10.9"/CMAKE_OSX_DEPLOYMENT_TARGET "12.0"/g' pylibCZIrw/CMakeLists.txt
           sed -i '' 's/ENDIF(APPLE)/ set(CMAKE_OSX_ARCHITECTURES "x86_64;arm64" CACHE STRING "Architectures for OS X" FORCE)\r\nENDIF(APPLE)/g' pylibCZIrw/CMakeLists.txt
 
-      - name: Debugging with tmate
-        if: ${{ matrix.os == 'macos-13' ||  matrix.os == 'macos-14'}}
-        uses: mxschmitt/action-tmate@v3.18
+      - name: Fix cmake for Mac Intel
+        if: ${{ matrix.os == 'macos-13'}}
+        run: |
+          sed -i '' 's/x64-linux/x64-osx/g' pylibCZIrw/setup.py
+          cat pylibCZIrw/setup.py
+
+      - name: Fix cmake for Mac ARM
+        if: ${{ matrix.os == 'macos-14'}}
+        run: |
+          sed -i '' 's/x64-linux/arm64-osx/g' pylibCZIrw/setup.py
 
       - name: Build wheels
         uses: pypa/cibuildwheel@v2.18.1
