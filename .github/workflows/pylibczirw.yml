@@ -72,7 +72,7 @@ jobs:
         run: |
           sed -i '' 's/CMAKE_OSX_DEPLOYMENT_TARGET "10.9"/CMAKE_OSX_DEPLOYMENT_TARGET "12.0"/g' pylibCZIrw/CMakeLists.txt
           sed -i '' 's/ENDIF(APPLE)/ set(CMAKE_OSX_ARCHITECTURES "x86_64;arm64" CACHE STRING "Architectures for OS X" FORCE)\r\nENDIF(APPLE)/g' pylibCZIrw/CMakeLists.txt
-          echo 'set(CMAKE_OSX_DEPLOYMENT_TARGET "12.0")\r\nset(CMAKE_OSX_ARCHITECTURES "x86_64;arm64" CACHE STRING "Architectures for OS X" FORCE)' >> pylibCZIrw/CMakeLists.txt
+          printf '\n\nset(CMAKE_OSX_DEPLOYMENT_TARGET "12.0")\nset(CMAKE_OSX_ARCHITECTURES "x86_64;arm64" CACHE STRING "Architectures for OS X" FORCE)' >> pylibCZIrw/CMakeLists.txt
           tail pylibCZIrw/CMakeLists.txt
 
       - name: Patch triplet for Mac Intel
