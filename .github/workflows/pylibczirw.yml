@@ -86,6 +86,10 @@ jobs:
         run: |
           sed -i '' 's/x64-linux/arm64-osx/g' pylibCZIrw/setup.py
 
+      - name: Debugging with tmate
+        if: ${{ matrix.os == 'macos-13' ||  matrix.os == 'macos-14'}}
+        uses: mxschmitt/action-tmate@v3.18
+
       - name: Build wheels
         uses: pypa/cibuildwheel@v2.18.1
         env:
