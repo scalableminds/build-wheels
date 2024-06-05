@@ -92,8 +92,9 @@ jobs:
         run: |
           git clone https://github.com/microsoft/vcpkg
           ./vcpkg/bootstrap-vcpkg.sh
-          echo "is this /Users/runner/work/build-wheels/build-wheels/vcpkg ?"
-          pwd
+
+      - name: Debugging with tmate
+        uses: mxschmitt/action-tmate@v3.18
 
       - name: Build wheels
         uses: pypa/cibuildwheel@v2.18.1
