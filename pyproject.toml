@@ -21,9 +21,6 @@ before-build = """
 environment = { VCPKG_INSTALLATION_ROOT = "C:\\vcpkg" }
 
 [tool.cibuildwheel.macos]
-before-build = """
-            git clone https://github.com/microsoft/vcpkg
-            ./vcpkg/bootstrap-vcpkg.sh
-            ./vcpkg/vcpkg update
-            """
-environment = { VCPKG_INSTALLATION_ROOT = "/Users/runner/work/build-wheels/build-wheels/vcpkg" }
+
+environment = { VCPKG_INSTALLATION_ROOT="/Users/runner/work/build-wheels/build-wheels/vcpkg" }
+#environment = { VCPKG_INSTALLATION_ROOT="/usr/local/bin/vcpkg" }
