@@ -51,16 +51,21 @@ jobs:
         if: ${{ matrix.os == 'ubuntu-latest'}}
         run: |
           sed -i 's/Requires-Python: >=3.7,<3.12/Requires-Python: >=3.7,<4/g' pylibCZIrw/PKG-INFO
+          sed -i 's/Requires-Python: >=3.7,<3.12/Requires-Python: >=3.7,<4/g' pylibCZIrw/pylibCZIrw.egg-info/PKG-INFO
+          sed -i 's/python_requires=">=3.7,<3.12",/python_requires=">=3.7,<4",/g' pylibCZIrw/setup.py
 
       - name: Patch to include Python3.12 in MacOS
         if: ${{ matrix.os == 'macos-13' ||  matrix.os == 'macos-14'}}
         run: |
           sed -i '' 's/Requires-Python: >=3.7,<3.12/Requires-Python: >=3.7,<4/g' pylibCZIrw/PKG-INFO
+          sed -i '' 's/python_requires=">=3.7,<3.12",/python_requires=">=3.7,<4",/g' pylibCZIrw/setup.py
 
       - name: Patch to include Python3.12 in Windows
         if: ${{ matrix.os == 'windows-latest'}}
         run: |
           powershell -command "(Get-Content pylibCZIrw/PKG-INFO) -replace 'Requires-Python: >=3.7,<3.12', 'Requires-Python: >=3.7,<4' | Set-Content pylibCZIrw/PKG-INFO"
+          powershell -command "(Get-Content pylibCZIrw/PKG-INFO) -replace 'Requires-Python: >=3.7,<3.12', 'Requires-Python: >=3.7,<4' | Set-Content pylibCZIrw/pylibCZIrw.egg-info/PKG-INFO"
+          powershell -command "(Get-Content pylibCZIrw/PKG-INFO) -replace 'python_requires=">=3.7,<3.12', 'python_requires=">=3.7,<4' | Set-Content pylibCZIrw/setup.py"
 
       - name: Fix cmake for Mac
         if: ${{ matrix.os == 'macos-13' ||  matrix.os == 'macos-14'}}
