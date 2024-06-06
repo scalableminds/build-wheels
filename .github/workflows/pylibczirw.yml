@@ -64,10 +64,15 @@ jobs:
           powershell -command "(Get-Content pylibCZIrw\\pylibCZIrw.egg-info\\PKG-INFO) -replace 'Requires-Python: >=3.7,<3.12', 'Requires-Python: >=3.7,<4' | Set-Content pylibCZIrw\\pylibCZIrw.egg-info\\PKG-INFO"
           powershell -command "(Get-Content pylibCZIrw\\setup.py) -replace 'python_requires=\">=3.7,<3.12', 'python_requires=\">=3.7,<4' | Set-Content pylibCZIrw\\setup.py"
 
-      - name: Fix cmake for Mac
-        if: ${{ matrix.os == 'macos-13' ||  matrix.os == 'macos-14'}}
+      - name: Fix cmake for Mac x86_64
+        if: ${{ matrix.os == 'macos-13'}}
         # set CMAKE_OSX_DEPLOYMENT_TARGET "12.0" after e.g. "project(_pylibCZIrw VERSION 4.1.1)"
-        run: sed -i '' 's/project(\(.*\))/project\(\1\)\n\nset(CMAKE_OSX_DEPLOYMENT_TARGET "12.0")\nset(CMAKE_OSX_ARCHITECTURES "x86_64;arm64" CACHE STRING "Architectures for OS X" FORCE)\n/g' pylibCZIrw/CMakeLists.txt
+        run: sed -i '' 's/project(\(.*\))/project\(\1\)\n\nset(CMAKE_OSX_DEPLOYMENT_TARGET "12.0")\nset(CMAKE_OSX_ARCHITECTURES "x86_64" CACHE STRING "Architectures for OS X" FORCE)\n/g' pylibCZIrw/CMakeLists.txt
+
+      - name: Fix cmake for Mac arm64
+        if: ${{matrix.os == 'macos-14'}}
+        # set CMAKE_OSX_DEPLOYMENT_TARGET "12.0" after e.g. "project(_pylibCZIrw VERSION 4.1.1)"
+        run: sed -i '' 's/project(\(.*\))/project\(\1\)\n\nset(CMAKE_OSX_DEPLOYMENT_TARGET "12.0")\nset(CMAKE_OSX_ARCHITECTURES "arm64" CACHE STRING "Architectures for OS X" FORCE)\n/g' pylibCZIrw/CMakeLists.txt
 
       - name: Patch triplet for Mac Intel
         if: ${{ matrix.os == 'macos-13'}}
@@ -101,13 +106,12 @@ jobs:
            output-dir: wheelhouse
            config-file: "pyproject.toml"
 
-
-
       - name: Fix platform tags for Mac
         if: ${{ matrix.os == 'macos-13' ||  matrix.os == 'macos-14'}}
         run: |
+          pwd
+          ls ./pylibCZIrw/wheelhouse/*.whl
           for f in ./pylibCZIrw/wheelhouse/*.whl ; do mv $f ${f//macosx_12_0/macosx_10_9} ; done
-
 
       - uses: actions/upload-artifact@v3
         with:
