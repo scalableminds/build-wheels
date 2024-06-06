@@ -22,5 +22,5 @@ environment = { VCPKG_INSTALLATION_ROOT = "C:\\vcpkg" }
 
 [tool.cibuildwheel.macos]
 
-environment = { VCPKG_INSTALLATION_ROOT="/Users/runner/work/build-wheels/build-wheels/vcpkg" }
+environment = {VCPKG_INSTALLATION_ROOT="/Users/runner/work/build-wheels/build-wheels/vcpkg"}
 #environment = { VCPKG_INSTALLATION_ROOT="/usr/local/bin/vcpkg" }
