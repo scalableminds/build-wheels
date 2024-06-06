@@ -24,7 +24,7 @@ jobs:
       matrix:
         # macos-13 is an intel runner, macos-14 is apple silicon
         # os: [ubuntu-latest, windows-latest, macos-13, macos-14]
-        os: [macos-latest]
+        os: [macos-13, macos-14]
       fail-fast: false
     defaults:
       run:
@@ -56,7 +56,7 @@ jobs:
           sed -i 's/python_requires=">=3.7,<3.12",/python_requires=">=3.7,<4",/g' pylibCZIrw/setup.py
 
       - name: Patch to include Python3.12 in MacOS
-        if: ${{ matrix.os == 'macos-latest'}}
+        if: ${{ matrix.os == 'macos-13' ||  matrix.os == 'macos-14'}}
         run: |
           sed -i '' 's/Requires-Python: >=3.7,<3.12/Requires-Python: >=3.7,<4/g' pylibCZIrw/PKG-INFO
           sed -i '' 's/python_requires=">=3.7,<3.12",/python_requires=">=3.7,<4",/g' pylibCZIrw/setup.py
@@ -69,29 +69,38 @@ jobs:
           powershell -command "(Get-Content pylibCZIrw\\setup.py) -replace 'python_requires=\">=3.7,<3.12', 'python_requires=\">=3.7,<4' | Set-Content pylibCZIrw\\setup.py"
 
       - name: Fix cmake for Mac
-        if: ${{ matrix.os == 'macos-latest'}}
+        if: ${{ matrix.os == 'macos-13' ||  matrix.os == 'macos-14'}}
         run: |
           sed -i '' 's/CMAKE_OSX_DEPLOYMENT_TARGET "10.9"/CMAKE_OSX_DEPLOYMENT_TARGET "12.0"/g' pylibCZIrw/CMakeLists.txt
           sed -i '' 's/ENDIF(APPLE)/ set(CMAKE_OSX_ARCHITECTURES "x86_64;arm64" CACHE STRING "Architectures for OS X" FORCE)\r\nENDIF(APPLE)/g' pylibCZIrw/CMakeLists.txt
           printf '\n\nset(CMAKE_OSX_DEPLOYMENT_TARGET "12.0")\nset(CMAKE_OSX_ARCHITECTURES "x86_64;arm64" CACHE STRING "Architectures for OS X" FORCE)' >> pylibCZIrw/CMakeLists.txt
           tail pylibCZIrw/CMakeLists.txt
 
+      - name: Patch triplet for Mac Intel
+        if: ${{ matrix.os == 'macos-13'}}
+        run: |
+          sed -i '' 's/x64-linux/x64-osx/g' pylibCZIrw/setup.py
+          cat pylibCZIrw/setup.py
+
       - name: Patch triplet for Mac ARM
-        if: ${{ matrix.os == 'macos-latest'}}
+        if: ${{ matrix.os == 'macos-14'}}
         run: |
           sed -i '' 's/x64-linux/arm64-osx/g' pylibCZIrw/setup.py
 
       - name: Install vcpkg on Mac
-        if: ${{ matrix.os == 'macos-latest'}}
+        if: ${{ matrix.os == 'macos-13' ||  matrix.os == 'macos-14'}}
         run: |
           git clone https://github.com/microsoft/vcpkg
           ./vcpkg/bootstrap-vcpkg.sh
+
+      - name: Debugging with tmate
+        uses: mxschmitt/action-tmate@v3.18
 
       - name: Build wheels
         uses: pypa/cibuildwheel@v2.18.1
         env:
           CIBW_PROJECT_REQUIRES_PYTHON: ">=3.8"
-          CIBW_ARCHS_MACOS: "universal2"
+          CIBW_ARCHS_MACOS: ${{ matrix.os == 'macos-13' && 'x86_64' || 'arm64' }}
           CIBW_ARCHS_LINUX: "x86_64"
           CIBW_ARCHS_WINDOWS: "AMD64"
         with:
@@ -102,7 +111,7 @@ jobs:
 
 
       - name: Fix platform tags for Mac
-        if: ${{ matrix.os == 'macos-latest'}}
+        if: ${{ matrix.os == 'macos-13' ||  matrix.os == 'macos-14'}}
         run: |
           for f in ./pylibCZIrw/wheelhouse/*.whl ; do mv $f ${f//macosx_12_0/macosx_10_9} ; done
 
