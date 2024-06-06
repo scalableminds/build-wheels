@@ -8,7 +8,6 @@ before-build = """
             yum install -y ninja-build
             git clone https://github.com/microsoft/vcpkg
             ./vcpkg/bootstrap-vcpkg.sh
-            ./vcpkg/vcpkg update
             """
 environment = { VCPKG_INSTALLATION_ROOT = "{project}/vcpkg" }
 
@@ -23,4 +22,3 @@ environment = { VCPKG_INSTALLATION_ROOT = "C:\\vcpkg" }
 [tool.cibuildwheel.macos]
 
 environment = {VCPKG_INSTALLATION_ROOT="/Users/runner/work/build-wheels/build-wheels/vcpkg"}
-#environment = { VCPKG_INSTALLATION_ROOT="/usr/local/bin/vcpkg" }
