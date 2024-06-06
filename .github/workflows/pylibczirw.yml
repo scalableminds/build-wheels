@@ -71,10 +71,10 @@ jobs:
       - name: Fix cmake for Mac
         if: ${{ matrix.os == 'macos-13' ||  matrix.os == 'macos-14'}}
         run: |
-          sed -i '' 's/CMAKE_OSX_DEPLOYMENT_TARGET "10.9"/CMAKE_OSX_DEPLOYMENT_TARGET "12.0"/g' pylibCZIrw/CMakeLists.txt
-          sed -i '' 's/ENDIF(APPLE)/ set(CMAKE_OSX_ARCHITECTURES "x86_64;arm64" CACHE STRING "Architectures for OS X" FORCE)\r\nENDIF(APPLE)/g' pylibCZIrw/CMakeLists.txt
-          printf '\n\nset(CMAKE_OSX_DEPLOYMENT_TARGET "12.0")\nset(CMAKE_OSX_ARCHITECTURES "x86_64;arm64" CACHE STRING "Architectures for OS X" FORCE)' >> pylibCZIrw/CMakeLists.txt
-          tail pylibCZIrw/CMakeLists.txt
+          sed -i '' 's/project(\(.*\))/project\(\1\)\n\nset(CMAKE_OSX_DEPLOYMENT_TARGET "12.0")\nset(CMAKE_OSX_ARCHITECTURES "x86_64;arm64" CACHE STRING "Architectures for OS X" FORCE)\n/g' pylibCZIrw/CMakeLists.txt
+          cat pylibCZIrw/CMakeLists.txt
+        #sed -i '' 's/CMAKE_OSX_DEPLOYMENT_TARGET "10.9"/CMAKE_OSX_DEPLOYMENT_TARGET "12.0"/g' pylibCZIrw/CMakeLists.txt
+        #sed -i '' 's/ENDIF(APPLE)/ set(CMAKE_OSX_ARCHITECTURES "x86_64;arm64" CACHE STRING "Architectures for OS X" FORCE)\r\nENDIF(APPLE)/g' pylibCZIrw/CMakeLists.txt
 
       - name: Patch triplet for Mac Intel
         if: ${{ matrix.os == 'macos-13'}}
