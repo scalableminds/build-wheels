@@ -72,7 +72,7 @@ jobs:
       - name: Fix cmake for Mac arm64
         if: ${{matrix.os == 'macos-14'}}
         # set CMAKE_OSX_DEPLOYMENT_TARGET "12.0" after e.g. "project(_pylibCZIrw VERSION 4.1.1)"
-        run: sed -i '' 's/project(\(.*\))/project\(\1\)\n\nset(CMAKE_OSX_DEPLOYMENT_TARGET "12.0")\nset(CMAKE_OSX_ARCHITECTURES "arm64" CACHE STRING "Architectures for OS X" FORCE)\n/g' pylibCZIrw/CMakeLists.txt
+        run: sed -i '' 's/project(\(.*\))/project\(\1\)\n\nset(CMAKE_OSX_DEPLOYMENT_TARGET "14.0")\nset(CMAKE_OSX_ARCHITECTURES "arm64" CACHE STRING "Architectures for OS X" FORCE)\n/g' pylibCZIrw/CMakeLists.txt
 
       - name: Patch triplet for Mac Intel
         if: ${{ matrix.os == 'macos-13'}}
@@ -106,21 +106,20 @@ jobs:
            output-dir: wheelhouse
            config-file: "pyproject.toml"
 
-      - name: Debugging with tmate
-        if: ${{ matrix.os == 'macos-13' ||  matrix.os == 'macos-14'}}
+      - name: Debugging with tmate on failure
+        if: ${{failure()}}
+        timeout-minutes: 40
         uses: mxschmitt/action-tmate@v3.18
 
       - name: Fix platform tags for Mac
         if: ${{ matrix.os == 'macos-13' ||  matrix.os == 'macos-14'}}
         run: |
-          pwd
-          ls ./pylibCZIrw/wheelhouse/*.whl
-          for f in ./pylibCZIrw/wheelhouse/*.whl ; do mv $f ${f//macosx_12_0/macosx_10_9} ; done
+          for f in ./wheelhouse/*.whl ; do mv $f ${f//macosx_12_0/macosx_10_9} ; done
 
       - uses: actions/upload-artifact@v3
         with:
           name: wheels
-          path: ./pylibCZIrw/wheelhouse/*.whl
+          path: ./wheelhouse/*.whl
 
   publish:
     name: Publish wheels to pypi.scm.io
