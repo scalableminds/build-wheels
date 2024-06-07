@@ -17,7 +17,7 @@ jobs:
     name: Build wheels on ${{ matrix.os }}
     runs-on: ${{ matrix.os }}
     env:
-      CIBW_BUILD: "cp312-* cp38-* cp39-* cp310-* cp311-*"
+      CIBW_BUILD: "cp38-* cp39-* cp310-* cp311-* cp312-*"
       CIBW_VERSION: ${{ inputs.cibwVersion || '2.18.1'}}
       PYLIBCZIRW_VERSION: ${{ inputs.pylibczirwVersion || '4.1.1'}}
     strategy:
