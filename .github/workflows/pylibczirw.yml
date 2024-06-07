@@ -55,34 +55,22 @@ jobs:
         if: ${{ matrix.os == 'macos-13' ||  matrix.os == 'macos-14'}}
         run: |
           sed -i '' 's/Requires-Python: >=3.7,<3.12/Requires-Python: >=3.7,<4/g' pylibCZIrw/PKG-INFO
-          sed -i '' 's/python_requires=">=3.7,<3.12",/python_requires=">=3.7,<4",/g' pylibCZIrw/setup.py
 
       - name: Patch to include Python3.12 in Windows
         if: ${{ matrix.os == 'windows-latest'}}
         run: |
-          powershell -command "(Get-Content pylibCZIrw\\PKG-INFO) -replace 'Requires-Python: >=3.7,<3.12', 'Requires-Python: >=3.7,<4' | Set-Content pylibCZIrw\\PKG-INFO"
-          powershell -command "(Get-Content pylibCZIrw\\pylibCZIrw.egg-info\\PKG-INFO) -replace 'Requires-Python: >=3.7,<3.12', 'Requires-Python: >=3.7,<4' | Set-Content pylibCZIrw\\pylibCZIrw.egg-info\\PKG-INFO"
           powershell -command "(Get-Content pylibCZIrw\\setup.py) -replace 'python_requires=\">=3.7,<3.12', 'python_requires=\">=3.7,<4' | Set-Content pylibCZIrw\\setup.py"
 
-      - name: Fix cmake for Mac x86_64
-        if: ${{ matrix.os == 'macos-13'}}
-        # set CMAKE_OSX_DEPLOYMENT_TARGET "12.0" after e.g. "project(_pylibCZIrw VERSION 4.1.1)"
-        run: sed -i '' 's/project(\(.*\))/project\(\1\)\n\nset(CMAKE_OSX_DEPLOYMENT_TARGET "12.0")\nset(CMAKE_OSX_ARCHITECTURES "x86_64" CACHE STRING "Architectures for OS X" FORCE)\n/g' pylibCZIrw/CMakeLists.txt
-
-      - name: Fix cmake for Mac arm64
-        if: ${{matrix.os == 'macos-14'}}
-        # set CMAKE_OSX_DEPLOYMENT_TARGET "12.0" after e.g. "project(_pylibCZIrw VERSION 4.1.1)"
-        run: sed -i '' 's/project(\(.*\))/project\(\1\)\n\nset(CMAKE_OSX_DEPLOYMENT_TARGET "14.0")\nset(CMAKE_OSX_ARCHITECTURES "arm64" CACHE STRING "Architectures for OS X" FORCE)\n/g' pylibCZIrw/CMakeLists.txt
-
-      - name: Patch triplet for Mac Intel
+      - name: Fix cmake and triplet for Mac Intel
         if: ${{ matrix.os == 'macos-13'}}
         run: |
+          sed -i '' 's/project(\(.*\))/project\(\1\)\n\nset(CMAKE_OSX_DEPLOYMENT_TARGET "12.0")\nset(CMAKE_OSX_ARCHITECTURES "x86_64" CACHE STRING "Architectures for OS X" FORCE)\n/g' pylibCZIrw/CMakeLists.txt
           sed -i '' 's/x64-linux/x64-osx/g' pylibCZIrw/setup.py
-          cat pylibCZIrw/setup.py
 
-      - name: Patch triplet for Mac ARM
-        if: ${{ matrix.os == 'macos-14'}}
+      - name: Fix cmake and triplet for Mac ARM
+        if: ${{matrix.os == 'macos-14'}}
         run: |
+          sed -i '' 's/project(\(.*\))/project\(\1\)\n\nset(CMAKE_OSX_DEPLOYMENT_TARGET "14.0")\nset(CMAKE_OSX_ARCHITECTURES "arm64" CACHE STRING "Architectures for OS X" FORCE)\n/g' pylibCZIrw/CMakeLists.txt
           sed -i '' 's/x64-linux/arm64-osx/g' pylibCZIrw/setup.py
 
       - name: Install vcpkg on Mac
@@ -100,16 +88,10 @@ jobs:
           CIBW_ARCHS_WINDOWS: "AMD64"
           # TODO: which of these is the correct way of setting MACOSX_DEPLOYMENT_TARGET?
           MACOSX_DEPLOYMENT_TARGET: ${{ matrix.os == 'macos-13' && '12.0' || '14.0' }}
-          CIBW_ENVIRONMENT: ${{ matrix.os == 'macos-13' && 'MACOSX_DEPLOYMENT_TARGET="12.0"' || 'MACOSX_DEPLOYMENT_TARGET="14.0"' }}
         with:
            package-dir: ./pylibCZIrw
            output-dir: wheelhouse
            config-file: "pyproject.toml"
-
-      - name: Debugging with tmate on failure
-        if: ${{failure()}}
-        timeout-minutes: 40
-        uses: mxschmitt/action-tmate@v3.18
 
       - name: Fix platform tags for Mac
         if: ${{ matrix.os == 'macos-13' ||  matrix.os == 'macos-14'}}
