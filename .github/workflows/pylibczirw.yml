@@ -106,6 +106,10 @@ jobs:
            output-dir: wheelhouse
            config-file: "pyproject.toml"
 
+      - name: Debugging with tmate
+        if: ${{ matrix.os == 'macos-13' ||  matrix.os == 'macos-14'}}
+        uses: mxschmitt/action-tmate@v3.18
+
       - name: Fix platform tags for Mac
         if: ${{ matrix.os == 'macos-13' ||  matrix.os == 'macos-14'}}
         run: |
