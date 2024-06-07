@@ -47,14 +47,12 @@ jobs:
       - name: Patch to include Python3.12 in Linux
         if: ${{ matrix.os == 'ubuntu-latest'}}
         run: |
-          sed -i 's/Requires-Python: >=3.7,<3.12/Requires-Python: >=3.7,<4/g' pylibCZIrw/PKG-INFO
-          sed -i 's/Requires-Python: >=3.7,<3.12/Requires-Python: >=3.7,<4/g' pylibCZIrw/pylibCZIrw.egg-info/PKG-INFO
           sed -i 's/python_requires=">=3.7,<3.12",/python_requires=">=3.7,<4",/g' pylibCZIrw/setup.py
 
       - name: Patch to include Python3.12 in MacOS
         if: ${{ matrix.os == 'macos-13' ||  matrix.os == 'macos-14'}}
         run: |
-          sed -i '' 's/Requires-Python: >=3.7,<3.12/Requires-Python: >=3.7,<4/g' pylibCZIrw/PKG-INFO
+          sed -i '' 's/python_requires=">=3.7,<3.12",/python_requires=">=3.7,<4",/g' pylibCZIrw/setup.py
 
       - name: Patch to include Python3.12 in Windows
         if: ${{ matrix.os == 'windows-latest'}}
@@ -86,7 +84,6 @@ jobs:
           CIBW_ARCHS_MACOS: ${{ matrix.os == 'macos-13' && 'x86_64' || 'arm64' }}
           CIBW_ARCHS_LINUX: "x86_64"
           CIBW_ARCHS_WINDOWS: "AMD64"
-          # TODO: which of these is the correct way of setting MACOSX_DEPLOYMENT_TARGET?
           MACOSX_DEPLOYMENT_TARGET: ${{ matrix.os == 'macos-13' && '12.0' || '14.0' }}
         with:
            package-dir: ./pylibCZIrw
