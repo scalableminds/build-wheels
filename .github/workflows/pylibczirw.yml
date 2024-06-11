@@ -44,12 +44,6 @@ jobs:
           tar -xvf pylibCZIrw.tar.gz
           mv pylibCZIrw-${PYLIBCZIRW_VERSION} pylibCZIrw
 
-      - name: Download testdata
-        run: |
-          mkdir testdata
-          curl -o testdata/Translocation_comb_96_5ms.czi  https://github.com/zeiss-microscopy/OAD/blob/3b5d5e595707f1a7110ccd524b6adb10ccea65cd/Testdata/Translocation_comb_96_5ms.czi
-
-
       - name: Patch to include Python3.12 in Linux
         if: ${{ matrix.os == 'ubuntu-latest'}}
         run: |
@@ -105,10 +99,6 @@ jobs:
         with:
           name: wheels
           path: ./wheelhouse/*.whl
-
-      #- name: Debugging with tmate on failure
-      #  if: failure()
-      #  uses: mxschmitt/action-tmate@v3.18
 
   publish:
     name: Publish wheels to pypi.scm.io
