@@ -1,13 +1,9 @@
 from pylibCZIrw import czi as pyczi
 
 
-def test_pylibczirw():
-
-    # from https://github.com/zeiss-microscopy/OAD/blob/3b5d5e595707f1a7110ccd524b6adb10ccea65cd/Testdata/Translocation_comb_96_5ms.czi
-    filepath = "testdata/Translocation_comb_96_5ms.czi"
-
+def test_pylibczirw(czipath):
     # open the CZI document to read the
-    with pyczi.open_czi(filepath) as czidoc:
+    with pyczi.open_czi(czipath) as czidoc:
         # get the image dimensions as a dictionary, where the key identifies the dimension
         total_bounding_box = czidoc.total_bounding_box
 

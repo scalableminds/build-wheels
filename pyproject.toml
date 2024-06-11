@@ -2,7 +2,7 @@
 skip = "*-musllinux*"
 test-requires = "pytest"
 test-command = [
-            "pytest {project}/tests"
+            "pytest {project}/tests --czipath {project}/testdata/Translocation_comb_96_5ms.czi"
             ]
 
 [tool.cibuildwheel.linux]
