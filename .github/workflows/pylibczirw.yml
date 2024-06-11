@@ -106,9 +106,9 @@ jobs:
           name: wheels
           path: ./wheelhouse/*.whl
 
-      - name: Debugging with tmate on failure
-        if: failure()
-        uses: mxschmitt/action-tmate@v3.18
+      #- name: Debugging with tmate on failure
+      #  if: failure()
+      #  uses: mxschmitt/action-tmate@v3.18
 
   publish:
     name: Publish wheels to pypi.scm.io
