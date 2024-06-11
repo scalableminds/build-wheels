@@ -1,5 +1,13 @@
 [tool.cibuildwheel]
 skip = "*-musllinux*"
+test-requires = "pytest"
+test-command = """
+            pwd {project}
+            ls {project}
+            pwd {package}
+            ls {package}
+            pytest {package}/tests
+            """
 
 [tool.cibuildwheel.linux]
 before-build = """
@@ -22,3 +30,4 @@ environment = { VCPKG_INSTALLATION_ROOT = "C:\\vcpkg" }
 [tool.cibuildwheel.macos]
 
 environment = {VCPKG_INSTALLATION_ROOT="/Users/runner/work/build-wheels/build-wheels/vcpkg"}
+
