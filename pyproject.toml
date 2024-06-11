@@ -1,13 +1,13 @@
 [tool.cibuildwheel]
 skip = "*-musllinux*"
 test-requires = "pytest"
-test-command = """
-            pwd {project}
-            ls {project}
-            pwd {package}
-            ls {package}
-            pytest {package}/tests
-            """
+test-command = [
+            "pwd {project}",
+            "ls {project}",
+            "pwd {package}",
+            "ls {package}",
+            "pytest {package}/tests"
+            ]
 
 [tool.cibuildwheel.linux]
 before-build = """
