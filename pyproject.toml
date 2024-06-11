@@ -1,6 +1,6 @@
 [tool.cibuildwheel]
 skip = "*-musllinux*"
-test-requires = ["pytest", "requests"]
+test-requires = ["pytest", "requests", "matplotlib"]
 test-command = [
             "pytest {project}/tests"
             ]
