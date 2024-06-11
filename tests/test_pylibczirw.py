@@ -56,4 +56,3 @@ def test_pylibczirw():
         ax[1].set_title("Frame_1")
         ax[2].imshow(frame_2[...,0], cmap=cm.Greens_r)
         ax[2].set_title("Frame_2")
-        plt.show()
