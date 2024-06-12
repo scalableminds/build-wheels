@@ -1,0 +1,32 @@
+[tool.cibuildwheel]
+skip = "*-musllinux*"
+test-requires = ["pytest", "requests", "matplotlib"]
+test-command = [
+            "pytest {project}/tests"
+            ]
+# can not be tested, see discussion in https://github.com/pypa/cibuildwheel/pull/1169 for details
+test-skip = "cp38-macosx_*:arm64"
+
+
+[tool.cibuildwheel.linux]
+before-build = """
+            yum install -y curl zip unzip tar
+            yum install -y perl-IPC-Cmd
+            yum install -y ninja-build
+            git clone https://github.com/microsoft/vcpkg
+            ./vcpkg/bootstrap-vcpkg.sh
+            """
+environment = { VCPKG_INSTALLATION_ROOT = "{project}/vcpkg" }
+
+[tool.cibuildwheel.windows]
+before-build = """
+            cd C:\\
+            git clone https://github.com/microsoft/vcpkg
+            .\\vcpkg\\bootstrap-vcpkg.bat
+            """
+environment = { VCPKG_INSTALLATION_ROOT = "C:\\vcpkg" }
+
+[tool.cibuildwheel.macos]
+
+environment = {VCPKG_INSTALLATION_ROOT="/Users/runner/work/build-wheels/build-wheels/vcpkg"}
+
