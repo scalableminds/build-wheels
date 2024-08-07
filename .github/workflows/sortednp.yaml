@@ -48,22 +48,19 @@ jobs:
         run: |
           cd sortednp
           sed -i 's/.*numpy>.*/    install_requires=["numpy>=${NUMPY_VERSION}"],/g' setup.py
-          rm requirements.txt
-          cat pyproject.toml
+          cat setup.py
 
       - name: Patch to include Python3.12 in MacOS
         if: ${{ matrix.os == 'macos-13' ||  matrix.os == 'macos-14'}}
         run: |
           cd sortednp
           sed -i '' 's/.*numpy>.*/    install_requires=["numpy>=${NUMPY_VERSION}"],/g' setup.py
-          rm requirements.txt
 
       - name: Patch to include Python3.12 in Windows
         if: ${{ matrix.os == 'windows-latest'}}
         run: |
           cd sortednp
-          powershell -command "(Get-Content setup.py) -replace '.*numpy>.*', '    install_requires=["numpy>=$env:NUMPY_VERSION"],' | Set-Content setup.py"
-          rm requirements.txt
+          powershell -command "(Get-Content setup.py) -replace '.*numpy>.*', '    install_requires=[\"numpy>=$env:NUMPY_VERSION\"],' | Set-Content setup.py"
 
       - name: Install cibuildwheel
         run: python -m pip install cibuildwheel==${CIBW_VERSION}
