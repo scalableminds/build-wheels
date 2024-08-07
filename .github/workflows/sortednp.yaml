@@ -54,9 +54,7 @@ jobs:
           CIBW_ARCHS_WINDOWS: "AMD64"
         run: |
           cd sortednp
-          sed --version
-          sed -i "s/oldest-supported-numpy/numpy>=${NUMPY_VERSION}/g" pyproject.toml
-          CIBW_BEFORE_BUILD="pip install numpy==${NUMPY_VERSION}" \
+          CIBW_BEFORE_BUILD="sed -i "s/oldest-supported-numpy/numpy>=${NUMPY_VERSION}/g" pyproject.toml && pip install numpy==${NUMPY_VERSION}" \
             python -m cibuildwheel --output-dir wheelhouse
 
       - uses: actions/upload-artifact@v3
