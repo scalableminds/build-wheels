@@ -1,0 +1,74 @@
+name: DracoPy
+
+on:
+  workflow_dispatch:
+    inputs:
+      dracopyVersion:
+        description: "DracoPy version"
+        required: true
+        default: "0.5.0"
+      numpyVersion:
+        description: "numpy version"
+        required: true
+        default: "2.0"
+
+jobs:
+  build_wheels:
+    name: Build wheels on ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    env:
+      CIBW_BUILD: "cp310-* cp311-* cp312-*"
+      DRACOPY_VERSION: ${{ inputs.dracopyVersion }}
+      NUMPY_VERSION: ${{ inputs.numpyVersion }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+    defaults:
+      run:
+        shell: bash
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Download DracoPy
+        run: |
+          git clone https://gitlab.sauerburger.com/frank/sortednp.git \
+            --branch "release-${DRACOPY_VERSION}" --single-branch
+
+      - name: Install CMake
+        uses: ssrobins/install-cmake@v1
+
+      - name: Build wheels
+        uses: pypa/cibuildwheel@v2.16.5
+        # to supply options, put them in 'env', like:
+        env:
+          CIBW_BEFORE_BUILD: git submodule init && git submodule update && pip install cython numpy==${{ inputs.numpyVersion }} scikit-build
+          CPPFLAGS: -I/usr/local/opt/zlib/include
+          LDFLAGS: -L/usr/local/opt/zlib/lib
+          CIBW_SKIP: "*-musllinux*"
+          CIBW_ARCHS_MACOS: "universal2"
+          CIBW_ARCHS_LINUX: "x86_64"
+          CIBW_ARCHS_WINDOWS: "AMD64"
+
+      - uses: actions/upload-artifact@v3
+        with:
+          path: ./wheelhouse/*.whl
+
+  publish:
+    name: Publish wheels to pypi.scm.io
+    needs: [build_wheels]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Get wheels
+        uses: actions/download-artifact@v3
+        with:
+          name: wheels
+          path: dist
+
+      - name: Publish to pypy.scm.io
+        uses: pypa/gh-action-pypi-publish@release/v1
+        with:
+          user: ${{ secrets.PYPI_SCM_USERNAME }}
+          password: ${{ secrets.PYPI_SCM_PASSWORD }}
+          repository-url: https://pypi.scm.io/simple/
+          skip-existing: true
