@@ -43,20 +43,20 @@ jobs:
         with:
           python-version: "3.10"
 
-      - name: Patch Numpy version
+      - name: Patch Numpy version Linux
         if: ${{ matrix.os == 'ubuntu-latest'}}
         run: |
           cd sortednp
           sed -i 's/.*numpy>.*/    install_requires=["numpy>=${{ inputs.numpyVersion }}"],/g' setup.py
           cat setup.py
 
-      - name: Patch to include Python3.12 in MacOS
-        if: ${{ matrix.os == 'macos-13' ||  matrix.os == 'macos-14'}}
+      - name: Patch Numpy version MacOS
+        if: ${{ matrix.os == 'macos-latest' }}
         run: |
           cd sortednp
           sed -i '' 's/.*numpy>.*/    install_requires=["numpy>=${{ inputs.numpyVersion }}"],/g' setup.py
 
-      - name: Patch to include Python3.12 in Windows
+      - name: Patch Numpy version Windows
         if: ${{ matrix.os == 'windows-latest'}}
         run: |
           cd sortednp
