@@ -42,7 +42,7 @@ jobs:
         # uses: pypa/cibuildwheel@v2.16.5
         # to supply options, put them in 'env', like:
         env:
-          CIBW_BEFORE_BUILD: cd DracoPy && git submodule init && git submodule update && pip install cython numpy==${{ inputs.numpyVersion }} scikit-build
+          CIBW_BEFORE_BUILD: git submodule init && git submodule update && pip install cython numpy==${{ inputs.numpyVersion }} scikit-build
           CPPFLAGS: -I/usr/local/opt/zlib/include
           LDFLAGS: -L/usr/local/opt/zlib/lib
           CIBW_SKIP: "*-musllinux*"
