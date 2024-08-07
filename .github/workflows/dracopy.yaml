@@ -6,7 +6,7 @@ on:
       dracopyVersion:
         description: "DracoPy version"
         required: true
-        default: "0.5.0"
+        default: "1.4.0"
       numpyVersion:
         description: "numpy version"
         required: true
@@ -32,7 +32,7 @@ jobs:
 
       - name: Download DracoPy
         run: |
-          git clone https://gitlab.sauerburger.com/frank/sortednp.git \
+          git clone https://github.com/seung-lab/DracoPy \
             --branch "release-${DRACOPY_VERSION}" --single-branch
 
       - name: Install CMake
