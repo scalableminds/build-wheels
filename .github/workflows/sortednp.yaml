@@ -38,7 +38,6 @@ jobs:
         run: |
           git clone https://gitlab.sauerburger.com/frank/sortednp.git \
             --branch "release-${SORTEDNP_VERSION}" --single-branch
-          cd sortednp
 
       - uses: actions/setup-python@v4
         with:
@@ -47,6 +46,7 @@ jobs:
       - name: Patch Numpy version
         if: ${{ matrix.os == 'ubuntu-latest'}}
         run: |
+          cd sortednp
           sed -i  "s/oldest-supported-numpy/numpy>=${NUMPY_VERSION}/g" pyproject.toml
           rm requirements.txt
           cat pyproject.toml
@@ -54,12 +54,14 @@ jobs:
       - name: Patch to include Python3.12 in MacOS
         if: ${{ matrix.os == 'macos-13' ||  matrix.os == 'macos-14'}}
         run: |
+          cd sortednp
           sed -i '' "s/oldest-supported-numpy/numpy>=${NUMPY_VERSION}/g" pyproject.toml
           rm requirements.txt
 
       - name: Patch to include Python3.12 in Windows
         if: ${{ matrix.os == 'windows-latest'}}
         run: |
+          cd sortednp
           powershell -command "(Get-Content pyproject.toml) -replace 'oldest-supported-numpy', \"numpy>=${NUMPY_VERSION}\" | Set-Content pyproject.toml"
           rm requirements.txt
 
@@ -73,7 +75,7 @@ jobs:
           CIBW_ARCHS_LINUX: "x86_64"
           CIBW_ARCHS_WINDOWS: "AMD64"
         run: |
-          echo 
+          cd sortednp
           CIBW_BEFORE_BUILD="pip install numpy==${NUMPY_VERSION}" \
             python -m cibuildwheel --output-dir wheelhouse
 
