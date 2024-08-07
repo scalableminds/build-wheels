@@ -43,6 +43,21 @@ jobs:
         with:
           python-version: "3.10"
 
+      - name: Patch Numpy version
+        if: ${{ matrix.os == 'ubuntu-latest'}}
+        run: |
+          sed -i  "s/oldest-supported-numpy/numpy>=${NUMPY_VERSION}/g" pyproject.toml
+
+      - name: Patch to include Python3.12 in MacOS
+        if: ${{ matrix.os == 'macos-13' ||  matrix.os == 'macos-14'}}
+        run: |
+          sed -i '' "s/oldest-supported-numpy/numpy>=${NUMPY_VERSION}/g" pyproject.toml
+
+      - name: Patch to include Python3.12 in Windows
+        if: ${{ matrix.os == 'windows-latest'}}
+        run: |
+          powershell -command "(Get-Content pyproject.toml) -replace 'oldest-supported-numpy', \"numpy>=${NUMPY_VERSION}\" | Set-Content pyproject.toml"
+
       - name: Install cibuildwheel
         run: python -m pip install cibuildwheel==${CIBW_VERSION}
 
@@ -54,7 +69,8 @@ jobs:
           CIBW_ARCHS_WINDOWS: "AMD64"
         run: |
           cd sortednp
-          CIBW_BEFORE_BUILD="sed -i "s/oldest-supported-numpy/numpy>=${NUMPY_VERSION}/g" pyproject.toml && pip install numpy==${NUMPY_VERSION}" \
+          echo 
+          CIBW_BEFORE_BUILD="pip install numpy==${NUMPY_VERSION}" \
             python -m cibuildwheel --output-dir wheelhouse
 
       - uses: actions/upload-artifact@v3
