@@ -47,7 +47,7 @@ jobs:
         if: ${{ matrix.os == 'ubuntu-latest'}}
         run: |
           cd sortednp
-          sed -i  "s/oldest-supported-numpy/numpy>=${NUMPY_VERSION}/g" pyproject.toml
+          sed -i 's/.*numpy>.*/    install_requires=["numpy>=${NUMPY_VERSION}"],/g' setup.py
           rm requirements.txt
           cat pyproject.toml
 
@@ -55,14 +55,14 @@ jobs:
         if: ${{ matrix.os == 'macos-13' ||  matrix.os == 'macos-14'}}
         run: |
           cd sortednp
-          sed -i '' "s/oldest-supported-numpy/numpy>=${NUMPY_VERSION}/g" pyproject.toml
+          sed -i '' 's/.*numpy>.*/    install_requires=["numpy>=${NUMPY_VERSION}"],/g' setup.py
           rm requirements.txt
 
       - name: Patch to include Python3.12 in Windows
         if: ${{ matrix.os == 'windows-latest'}}
         run: |
           cd sortednp
-          powershell -command "(Get-Content pyproject.toml) -replace 'oldest-supported-numpy', \"numpy>=${NUMPY_VERSION}\" | Set-Content pyproject.toml"
+          powershell -command "(Get-Content setup.py) -replace '.*numpy>.*', '    install_requires=["numpy>=$env:NUMPY_VERSION"],' | Set-Content setup.py"
           rm requirements.txt
 
       - name: Install cibuildwheel
