@@ -6,22 +6,21 @@ on:
       sortednpVersion:
         description: "sortednp version"
         required: true
-        default: "0.4.0"
+        default: "0.5.0"
       numpyVersion:
         description: "numpy version"
         required: true
-        default: "1.23.5"
+        default: "2.0"
       cibwVersion:
         description: "cibuildwheel version"
         default: "2.12.3"
-
 
 jobs:
   build_wheels:
     name: Build wheels on ${{ matrix.os }}
     runs-on: ${{ matrix.os }}
     env:
-      CIBW_BUILD: "cp38-* cp39-* cp310-* cp311-*"
+      CIBW_BUILD: "cp39-* cp310-* cp311-* cp312-*"
       SORTEDNP_VERSION: ${{ inputs.sortednpVersion }}
       NUMPY_VERSION: ${{ inputs.numpyVersion }}
       CIBW_VERSION: ${{ inputs.cibwVersion }}
@@ -42,7 +41,7 @@ jobs:
 
       - uses: actions/setup-python@v4
         with:
-          python-version: '3.10'
+          python-version: "3.10"
 
       - name: Install cibuildwheel
         run: python -m pip install cibuildwheel==${CIBW_VERSION}
@@ -62,7 +61,7 @@ jobs:
         with:
           name: wheels
           path: ./sortednp/wheelhouse/*.whl
-  
+
   publish:
     name: Publish wheels to pypi.scm.io
     needs: [build_wheels]
