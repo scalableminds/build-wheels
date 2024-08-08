@@ -22,7 +22,7 @@ jobs:
       NUMPY_VERSION: ${{ inputs.numpyVersion }}
     strategy:
       matrix:
-        os: [ubuntu-latest, macos-latest]
+        os: [ubuntu-latest]
     defaults:
       run:
         shell: bash
@@ -73,4 +73,4 @@ jobs:
           user: ${{ secrets.PYPI_SCM_USERNAME }}
           password: ${{ secrets.PYPI_SCM_PASSWORD }}
           repository-url: https://pypi.scm.io/simple/
-          skip-existing: true
+          skip-existing: false
