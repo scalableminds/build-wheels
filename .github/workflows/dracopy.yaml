@@ -43,7 +43,7 @@ jobs:
           CPPFLAGS: -I/usr/local/opt/zlib/include
           LDFLAGS: -L/usr/local/opt/zlib/lib
           CIBW_SKIP: "*-musllinux*"
-          CIBW_ARCHS_MACOS: "universal2"
+          CIBW_ARCHS_MACOS: "x86_64 arm64"
           CIBW_ARCHS_LINUX: "x86_64"
           CIBW_ARCHS_WINDOWS: "AMD64"
         run: |
