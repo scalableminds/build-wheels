@@ -6,7 +6,7 @@ on:
       dracopyVersion:
         description: "DracoPy version"
         required: true
-        default: "0.5.0"
+        default: "1.4.0"
       numpyVersion:
         description: "numpy version"
         required: true
@@ -17,12 +17,12 @@ jobs:
     name: Build wheels on ${{ matrix.os }}
     runs-on: ${{ matrix.os }}
     env:
-      CIBW_BUILD: "cp310-* cp311-* cp312-*"
+      CIBW_BUILD: "cp310-* cp311-*"
       DRACOPY_VERSION: ${{ inputs.dracopyVersion }}
       NUMPY_VERSION: ${{ inputs.numpyVersion }}
     strategy:
       matrix:
-        os: [ubuntu-latest, windows-latest, macos-latest]
+        os: [ubuntu-latest, macos-latest]
     defaults:
       run:
         shell: bash
@@ -32,27 +32,42 @@ jobs:
 
       - name: Download DracoPy
         run: |
-          git clone https://gitlab.sauerburger.com/frank/sortednp.git \
-            --branch "release-${DRACOPY_VERSION}" --single-branch
+          git clone https://github.com/seung-lab/DracoPy \
+            --branch "${DRACOPY_VERSION}" --single-branch
 
-      - name: Install CMake
-        uses: ssrobins/install-cmake@v1
+      - name: Patch Numpy version Linux
+        if: ${{ matrix.os == 'ubuntu-latest'}}
+        run: |
+          cd DracoPy
+          sed -i "s/oldest-supported-numpy/numpy>=${{ inputs.numpyVersion }}/g" pyproject.toml
+          cat pyproject.toml
+
+      - name: Patch Numpy version MacOS
+        if: ${{ matrix.os == 'macos-latest' }}
+        run: |
+          cd DracoPy
+          sed -i '' 's/oldest-supported-numpy/numpy>=${{ inputs.numpyVersion }}/g' pyproject.toml
 
       - name: Build wheels
-        uses: pypa/cibuildwheel@v2.16.5
+        # uses: pypa/cibuildwheel@v2.16.5
         # to supply options, put them in 'env', like:
         env:
           CIBW_BEFORE_BUILD: git submodule init && git submodule update && pip install cython numpy==${{ inputs.numpyVersion }} scikit-build
           CPPFLAGS: -I/usr/local/opt/zlib/include
           LDFLAGS: -L/usr/local/opt/zlib/lib
           CIBW_SKIP: "*-musllinux*"
-          CIBW_ARCHS_MACOS: "universal2"
+          CIBW_ARCHS_MACOS: "x86_64 arm64"
           CIBW_ARCHS_LINUX: "x86_64"
           CIBW_ARCHS_WINDOWS: "AMD64"
+        run: |
+          cd DracoPy
+          python -m pip install cibuildwheel==2.16.5
+          python -m cibuildwheel --output-dir wheelhouse
 
       - uses: actions/upload-artifact@v3
         with:
-          path: ./wheelhouse/*.whl
+          name: wheels
+          path: ./DracoPy/wheelhouse/*.whl
 
   publish:
     name: Publish wheels to pypi.scm.io
@@ -71,4 +86,4 @@ jobs:
           user: ${{ secrets.PYPI_SCM_USERNAME }}
           password: ${{ secrets.PYPI_SCM_PASSWORD }}
           repository-url: https://pypi.scm.io/simple/
-          skip-existing: true
+          skip-existing: false
