@@ -14,8 +14,7 @@ jobs:
     runs-on: ubuntu-latest
     container:
       image: quay.io/pypa/manylinux2010_x86_64 #We use the outdated manylinux2010 to build the wheels to ensure compatibility with older systems (e.g. CentOS 6 and glibc 2.12)
-      env:
-        PYBIN: /opt/python/cp310-cp310/bin
+      options: "--entrypoint /bin/bash"
     strategy:
       matrix:
         python_version: ["3.10", "3.11"]
@@ -28,7 +27,6 @@ jobs:
           chmod +x ./Mambaforge-24.3.0-0-Linux-x86_64.sh
           ./Mambaforge-24.3.0-0-Linux-x86_64.sh  -b
           export PATH=/root/mambaforge/bin/:$PATH
-          ls /root/mambaforge/bin/
           mamba create -n pyenv python==${{ matrix.python_version }} -y
           mamba init
           source ~/.bashrc
