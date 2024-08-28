@@ -33,21 +33,22 @@ jobs:
 
       - name: Use Mamba to create a Python environment
         run: |
+          export PATH=/root/mambaforge/bin/:/opt/rh/devtoolset-9/root/usr/bin:$PATH
           mamba create -n pyenv python==${{ matrix.python_version }} -y
           mamba init
 
       - name: Install more dependencies via pip
         run: |
+          export PATH=/root/mambaforge/bin/:/opt/rh/devtoolset-9/root/usr/bin:$PATH
           source ~/.bashrc
           mamba activate pyenv
-          export PATH=/opt/rh/devtoolset-9/root/usr/bin:$PATH
           pip install cmake numpy==2.0 onnx packaging wheel auditwheel sympy pytest
 
       - name: Actually build the wheel
         run: |
+          export PATH=/root/mambaforge/bin/:/opt/rh/devtoolset-9/root/usr/bin:$PATH
           source ~/.bashrc
           mamba activate pyenv
-          export PATH=/opt/rh/devtoolset-9/root/usr/bin:$PATH
           git clone --depth 1 --branch v1.19.0 --recursive https://github.com/Microsoft/onnxruntime.git
           cd onnxruntime/
           ./build.sh --config Release --build_shared_lib --parallel --compile_no_warning_as_error --skip_submodule_sync --allow_running_as_root --build --build_wheel
