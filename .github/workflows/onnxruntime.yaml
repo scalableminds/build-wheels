@@ -24,7 +24,7 @@ jobs:
         run: |
           yum install -y wget centos-release-scl devtoolset-9
 
-      - name: Install required yum packages
+      - name: Install Mamba
         run: |
           wget https://github.com/conda-forge/miniforge/releases/download/24.3.0-0/Mambaforge-24.3.0-0-Linux-x86_64.sh
           chmod +x ./Mambaforge-24.3.0-0-Linux-x86_64.sh
