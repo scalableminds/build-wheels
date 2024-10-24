@@ -14,6 +14,10 @@ on:
       cibwVersion:
         description: "cibuildwheel version"
         default: "2.12.3"
+      newVersionTag:
+        description: "The name/tag of the version published"
+        required: true
+        default: "0.5.0.1"
 
 jobs:
   build_wheels:
@@ -26,7 +30,7 @@ jobs:
       CIBW_VERSION: ${{ inputs.cibwVersion }}
     strategy:
       matrix:
-        os: [ubuntu-latest, windows-latest, macos-latest]
+        os: [ubuntu-latest, macos-latest]
     defaults:
       run:
         shell: bash
@@ -48,19 +52,23 @@ jobs:
         run: |
           cd sortednp
           sed -i 's/.*numpy>.*/    install_requires=["numpy>=${{ inputs.numpyVersion }}"],/g' setup.py
+          sed -i 's/.*version=.*/    version="${{ inputs.newVersionTag }}",/g' setup.py
+          sed -i 's/.*__version__=.*/__version__ = "${{ inputs.newVersionTag }}"/g' src/sortednp/__init__.py
           cat setup.py
+          cat src/sortednp/__init__.py
+          sed -i "s/oldest-supported-numpy/numpy>=${{ inputs.numpyVersion }}/g" pyproject.toml
+          cat pyproject.toml
 
       - name: Patch Numpy version MacOS
         if: ${{ matrix.os == 'macos-latest' }}
         run: |
           cd sortednp
           sed -i '' 's/.*numpy>.*/    install_requires=["numpy>=${{ inputs.numpyVersion }}"],/g' setup.py
-
-      - name: Patch Numpy version Windows
-        if: ${{ matrix.os == 'windows-latest'}}
-        run: |
-          cd sortednp
-          powershell -command "(Get-Content setup.py) -replace '.*numpy>.*', '    install_requires=[\"numpy>=${{ inputs.numpyVersion }}\"],' | Set-Content setup.py"
+          sed -i '' 's/.*version=.*/    version="${{ inputs.newVersionTag }}",/g' setup.py
+          sed -i '' 's/.*__version__=.*/__version__ = "${{ inputs.newVersionTag }}"/g' src/sortednp/__init__.py
+          cat setup.py
+          cat src/sortednp/__init__.py
+          sed -i '' 's/oldest-supported-numpy/numpy>=${{ inputs.numpyVersion }}/g' pyproject.toml
 
       - name: Install cibuildwheel
         run: python -m pip install cibuildwheel==${CIBW_VERSION}

@@ -12,27 +12,37 @@ jobs:
   build_wheels:
     name: Build onnxruntime wheel for
     runs-on: ubuntu-latest
-    container:
-      image: quay.io/pypa/manylinux2010_x86_64
-      env:
-        PYBIN: /opt/python/cp310-cp310/bin
+
+    strategy:
+      matrix:
+        python_version: ["3.10", "3.11"]
     steps:
-      - name: Build wheel
-        run: |
-          $PYBIN/python -m venv /venv
-          source /venv/bin/activate
-          python3 -m pip install cmake
-          yum install -y centos-release-scl
-          yum install -y devtoolset-9
-          export PATH=/opt/rh/devtoolset-9/root/usr/bin:$PATH
-          pip install numpy==2.0 onnx packaging wheel
-          git clone --depth 1 --branch ${{ inputs.onnxruntimeBranch }} --recursive https://github.com/Microsoft/onnxruntime.git
-          cd onnxruntime/
-          ./build.sh --config Release --build_shared_lib --parallel --compile_no_warning_as_error --skip_submodule_sync --allow_running_as_root --build_wheel
+      - name: Build Wheel
+        uses: addnab/docker-run-action@v3
+        with:
+          image: quay.io/pypa/manylinux2010_x86_64 #We use the outdated manylinux2010 to build the wheels to ensure compatibility with older systems (e.g. CentOS 6 and glibc 2.12)
+          options: -v ${{ github.workspace }}:/dist
+          shell: bash
+          run: |
+            yum install -y wget centos-release-scl devtoolset-9
+            export PATH=/opt/rh/devtoolset-9/root/usr/bin:$PATH
+            wget https://github.com/conda-forge/miniforge/releases/download/24.3.0-0/Mambaforge-24.3.0-0-Linux-x86_64.sh
+            chmod +x ./Mambaforge-24.3.0-0-Linux-x86_64.sh
+            ./Mambaforge-24.3.0-0-Linux-x86_64.sh  -b
+            export PATH=/root/mambaforge/bin/:$PATH
+            mamba create -n pyenv python==${{ matrix.python_version }} -y
+            mamba init
+            source ~/.bashrc
+            mamba activate pyenv
+            pip install cmake numpy==2.0 onnx packaging wheel auditwheel sympy pytest
+            git clone --depth 1 --branch ${{ inputs.onnxruntimeBranch }} --recursive https://github.com/Microsoft/onnxruntime.git
+            cd onnxruntime/
+            ./build.sh --build --update --config Release --build_shared_lib --parallel --compile_no_warning_as_error --skip_submodule_sync --allow_running_as_root --build_wheel
+            cp ./build/Linux/Release/dist/*.whl /dist
       - uses: actions/upload-artifact@v3
         with:
           name: wheels
-          path: /onnxruntime/build/Linux/Release/dist/*.whl
+          path: ${{ github.workspace }}/*.whl
 
   publish:
     name: Publish wheels to pypi.scm.io
