@@ -109,7 +109,8 @@ jobs:
       - name: Get wheels
         uses: actions/download-artifact@v4
         with:
-          name: wheels-*
+          pattern: wheels-*
+          merge-multiple: true
           path: dist
 
       - name: Publish to pypy.scm.io
