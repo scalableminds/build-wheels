@@ -1,7 +1,6 @@
 name: lightglue
 
 on:
-  push:
   workflow_dispatch:
     inputs:
       lightglueVersion:
