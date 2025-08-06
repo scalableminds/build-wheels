@@ -37,7 +37,7 @@ jobs:
         run: |
           git clone https://github.com/cvg/LightGlue.git lightglue
           cd lightglue
-          sed -i 's/^version = ".*"/version = "${ inputs.lightglueVersion }"/' pyproject.toml
+          sed -i 's/^version = ".*"/version = "${{ inputs.lightglueVersion }}"/' pyproject.toml
           python -m cibuildwheel --output-dir ../wheelhouse
 
       - uses: actions/upload-artifact@v4
