@@ -6,7 +6,7 @@ on:
       lightglueVersion:
         description: "LightGlue version"
         required: true
-        default: "5.0.0"
+        default: "0.1.0"
 
 jobs:
   build_wheels:
