@@ -40,7 +40,7 @@ jobs:
       - uses: actions/upload-artifact@v4
         with:
           name: wheels
-          path: ./wheelhouse/*.whl
+          path: ./wheelhouse/lightglue*.whl
 
   publish:
     name: Publish wheels to pypi.scm.io
