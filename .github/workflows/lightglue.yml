@@ -10,8 +10,8 @@ on:
 
 jobs:
   build_wheels:
-    name: Build wheels on ${{ matrix.os }}
-    runs-on: ${{ matrix.os }}
+    name: Build wheel
+    runs-on: ubuntu-latest
     env:
       CIBW_BUILD: "cp310-* cp311-*"
     defaults:
