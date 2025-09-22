@@ -67,7 +67,7 @@ jobs:
       - name: Fix cmake and triplet for Mac ARM
         if: ${{matrix.os == 'macos-15'}}
         run: |
-          sed -i '' 's/project(\(.*\))/project\(\1\)\n\nset(CMAKE_OSX_DEPLOYMENT_TARGET "14.0")\nset(CMAKE_OSX_ARCHITECTURES "arm64" CACHE STRING "Architectures for OS X" FORCE)\n/g' pylibczirw/CMakeLists.txt
+          sed -i '' 's/project(\(.*\))/project\(\1\)\n\nset(CMAKE_OSX_DEPLOYMENT_TARGET "11.0")\nset(CMAKE_OSX_ARCHITECTURES "arm64" CACHE STRING "Architectures for OS X" FORCE)\n/g' pylibczirw/CMakeLists.txt
           sed -i '' 's/x64-linux/arm64-osx/g' pylibczirw/setup.py
 
       - name: Install vcpkg on Mac
