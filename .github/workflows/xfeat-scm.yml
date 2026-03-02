@@ -1,0 +1,51 @@
+name: xfeat-scm
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build_wheels:
+    name: Build wheel
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        shell: bash
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Download LightGlue repository
+        run: git clone -b packaging https://github.com/scalableminds/accelerated_features
+
+      - name: Build wheels
+        run: |
+          cd accelerated_features
+          pip wheel --wheel-dir ../wheelhouse/ .
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: wheels
+          path: ./wheelhouse/xfeat-scm*.whl
+
+  publish:
+    name: Publish wheels to pypi.scm.io
+    needs: [build_wheels]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Get wheels
+        uses: actions/download-artifact@v4
+        with:
+          name: wheels
+          path: dist
+
+      - name: Publish to pypy.scm.io
+        uses: pypa/gh-action-pypi-publish@release/v1
+        with:
+          user: ${{ secrets.PYPI_SCM_USERNAME }}
+          password: ${{ secrets.PYPI_SCM_PASSWORD }}
+          repository-url: https://pypi.scm.io/simple/
+          skip-existing: true
