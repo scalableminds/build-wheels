@@ -2,11 +2,6 @@ name: lightglue
 
 on:
   workflow_dispatch:
-    inputs:
-      lightglueVersion:
-        description: "LightGlue version"
-        required: true
-        default: "0.1.0"
 
 jobs:
   build_wheels:
@@ -24,11 +19,7 @@ jobs:
           python-version: '3.11'
 
       - name: Download LightGlue repository
-        run: git clone https://github.com/cvg/LightGlue.git lightglue
-
-      - name: Set version in Linux
-        run: |
-          sed -i 's/^version = ".*"/version = "${{ inputs.lightglueVersion }}"/' lightglue/pyproject.toml
+        run: git clone https://github.com/scalableminds/LightGlue lightglue
 
       - name: Build wheels
         run: |
