@@ -1,4 +1,4 @@
-name: xfeat-scm
+name: scm-lightglue
 
 on:
   workflow_dispatch:
@@ -19,17 +19,17 @@ jobs:
           python-version: '3.11'
 
       - name: Download LightGlue repository
-        run: git clone -b packaging https://github.com/scalableminds/accelerated_features
+        run: git clone https://github.com/scalableminds/LightGlue lightglue
 
       - name: Build wheels
         run: |
-          cd accelerated_features
+          cd lightglue
           pip wheel --wheel-dir ../wheelhouse/ .
 
       - uses: actions/upload-artifact@v4
         with:
           name: wheels
-          path: ./wheelhouse/xfeat_scm*.whl
+          path: ./wheelhouse/scm_lightglue*.whl
 
   publish:
     name: Publish wheels to pypi.scm.io
