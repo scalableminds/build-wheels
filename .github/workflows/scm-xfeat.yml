@@ -42,10 +42,10 @@ jobs:
           name: wheels
           path: dist
 
-      - name: Publish to pypy.scm.io
+      - name: Publish to pypi.org
         uses: pypa/gh-action-pypi-publish@release/v1
         with:
           user: ${{ secrets.PYPI_USERNAME }}
           password: ${{ secrets.PYPI_SCM_PASSWORD }}
-          repository-url: https://pypi.scm.io/simple/
+          repository-url: https://pypi.org/simple/
           skip-existing: true
