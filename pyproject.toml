@@ -10,7 +10,8 @@ test-command = [
 # glibc-static is needed for the static OpenSSL build done by pylibCZIrw's setup.py
 before-all = """
             yum install -y curl zip unzip tar glibc-static
-            yum install -y perl-IPC-Cmd
+            # full perl (not just perl-interpreter) for OpenSSL's Configure script, built by vcpkg for curl
+            yum install -y perl perl-IPC-Cmd
             git clone https://github.com/microsoft/vcpkg /opt/vcpkg
             /opt/vcpkg/bootstrap-vcpkg.sh -disableMetrics
             """
