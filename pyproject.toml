@@ -4,29 +4,27 @@ test-requires = ["pytest", "requests", "matplotlib"]
 test-command = [
             "pytest {project}/tests"
             ]
-# can not be tested, see discussion in https://github.com/pypa/cibuildwheel/pull/1169 for details
-test-skip = "cp38-macosx_*:arm64"
 
 
 [tool.cibuildwheel.linux]
-before-build = """
-            yum install -y curl zip unzip tar
-            yum install -y perl-IPC-Cmd
-            yum install -y ninja-build
-            git clone https://github.com/microsoft/vcpkg
-            ./vcpkg/bootstrap-vcpkg.sh
+# glibc-static is needed for the static OpenSSL build done by pylibCZIrw's setup.py
+before-all = """
+            yum install -y curl zip unzip tar glibc-static
+            # full perl (not just perl-interpreter) for OpenSSL's Configure script, built by vcpkg for curl
+            yum install -y perl perl-IPC-Cmd
+            git clone https://github.com/microsoft/vcpkg /opt/vcpkg
+            /opt/vcpkg/bootstrap-vcpkg.sh -disableMetrics
             """
-environment = { VCPKG_INSTALLATION_ROOT = "{project}/vcpkg" }
+environment = { VCPKG_INSTALLATION_ROOT = "/opt/vcpkg" }
 
 [tool.cibuildwheel.windows]
-before-build = """
-            cd C:\\
-            git clone https://github.com/microsoft/vcpkg
-            .\\vcpkg\\bootstrap-vcpkg.bat
-            """
-environment = { VCPKG_INSTALLATION_ROOT = "C:\\vcpkg" }
+# Clone vcpkg once to a fixed location.
+# Must be a single line: cmd only runs the first line of a multi-line command.
+before-all = "git clone https://github.com/microsoft/vcpkg C:/scm-vcpkg && C:\\scm-vcpkg\\bootstrap-vcpkg.bat -disableMetrics"
+# Forward slashes: cibuildwheel's environment parsing strips backslashes (C:\vcpkg -> C:vcpkg)
+environment = { VCPKG_INSTALLATION_ROOT = "C:/scm-vcpkg" }
 
 [tool.cibuildwheel.macos]
-
-environment = {VCPKG_INSTALLATION_ROOT="/Users/runner/work/build-wheels/build-wheels/vcpkg"}
+# pylibCZIrw >= 6 uses Homebrew (not vcpkg) for its dependencies on macOS
+before-all = "brew install eigen"
 
