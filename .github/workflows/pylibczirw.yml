@@ -49,7 +49,8 @@ jobs:
           CIBW_ARCHS_MACOS: ${{ matrix.os == 'macos-15-intel' && 'x86_64' || 'arm64' }}
           CIBW_ARCHS_LINUX: "x86_64"
           CIBW_ARCHS_WINDOWS: "AMD64"
-          CIBW_MANYLINUX_X86_64_IMAGE: "manylinux2014"
+          # manylinux2014 (CentOS 7) is too old for the ninja binary that vcpkg downloads
+          CIBW_MANYLINUX_X86_64_IMAGE: "manylinux_2_28"
           # pylibCZIrw's setup.py reads these to configure the CMake build on macOS
           CIBW_ENVIRONMENT_MACOS: ${{ matrix.os == 'macos-15-intel' && 'MACOSX_DEPLOYMENT_TARGET=10.15 CMAKE_OSX_ARCHITECTURES=x86_64' || 'MACOSX_DEPLOYMENT_TARGET=11.0 CMAKE_OSX_ARCHITECTURES=arm64' }}
         with:

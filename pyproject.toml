@@ -11,17 +11,17 @@ test-command = [
 before-all = """
             yum install -y curl zip unzip tar glibc-static
             yum install -y perl-IPC-Cmd
-            yum install -y ninja-build
             git clone https://github.com/microsoft/vcpkg /opt/vcpkg
             /opt/vcpkg/bootstrap-vcpkg.sh -disableMetrics
             """
 environment = { VCPKG_INSTALLATION_ROOT = "/opt/vcpkg" }
 
 [tool.cibuildwheel.windows]
-# Use a fresh vcpkg instead of the runner's preinstalled one, which fails to detect the compiler.
+# Clone vcpkg once to a fixed location.
 # Must be a single line: cmd only runs the first line of a multi-line command.
-before-all = "git clone https://github.com/microsoft/vcpkg C:\\scm-vcpkg && C:\\scm-vcpkg\\bootstrap-vcpkg.bat -disableMetrics"
-environment = { VCPKG_INSTALLATION_ROOT = "C:\\scm-vcpkg" }
+before-all = "git clone https://github.com/microsoft/vcpkg C:/scm-vcpkg && C:\\scm-vcpkg\\bootstrap-vcpkg.bat -disableMetrics"
+# Forward slashes: cibuildwheel's environment parsing strips backslashes (C:\vcpkg -> C:vcpkg)
+environment = { VCPKG_INSTALLATION_ROOT = "C:/scm-vcpkg" }
 
 [tool.cibuildwheel.macos]
 # pylibCZIrw >= 6 uses Homebrew (not vcpkg) for its dependencies on macOS
