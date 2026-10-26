@@ -4,8 +4,6 @@ test-requires = ["pytest", "requests", "matplotlib"]
 test-command = [
             "pytest {project}/tests"
             ]
-# can not be tested, see discussion in https://github.com/pypa/cibuildwheel/pull/1169 for details
-test-skip = "cp38-macosx_*:arm64"
 
 
 [tool.cibuildwheel.linux]
@@ -27,6 +25,6 @@ before-build = """
 environment = { VCPKG_INSTALLATION_ROOT = "C:\\vcpkg" }
 
 [tool.cibuildwheel.macos]
-
-environment = {VCPKG_INSTALLATION_ROOT="/Users/runner/work/build-wheels/build-wheels/vcpkg"}
+# pylibCZIrw >= 6 uses Homebrew (not vcpkg) for its dependencies on macOS
+before-all = "brew install eigen"
 
